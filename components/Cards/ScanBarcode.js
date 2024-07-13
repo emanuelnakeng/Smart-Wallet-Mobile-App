@@ -1,31 +1,33 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import constants from '../../utils/constants';
-import { useEffect, useState } from 'react';
+import ButtonUI from '../UI/ButtonUI';
+import { useContext } from 'react';
+import { CardContext } from '../../utils/cardContextAPI';
 
-const ScanBarcode = ({ onClose, cameraPermission }) => {
+const SCAN_SIZE = constants.DEVICE_WIDTH - 40;
+const ScanBarcode = () => {
+	const { scannedData, barcodeScannedHandler, manualEntryHandler } =
+		useContext(CardContext);
 	const [permission, requestPermission] = useCameraPermissions();
-	const [scanData, setScanData] = useState('');
-
-	useEffect(() => {
-		requestPermission();
-	}, []);
-
-	const barcodeScannedHandler = ({ type, data }) => {
-		setScanData(data);
-		console.log(data);
-	};
 
 	if (!permission) {
 		return (
-			<View>
-				<Text style={{ textAlign: 'center' }}>
+			<View style={styles.noPermissionContainer}>
+				<Text style={styles.permissionText}>
 					We need your permission to use the camera
 				</Text>
-				<Button onPress={requestPermission} title='grant permission' />
+				<ButtonUI
+					backgroundColor={constants.BLACK_TRANSPARENT}
+					width={250}
+					onPress={requestPermission}
+				>
+					Grant Permission
+				</ButtonUI>
 			</View>
 		);
 	}
+
 	return (
 		<View style={styles.container}>
 			<CameraView
@@ -34,28 +36,42 @@ const ScanBarcode = ({ onClose, cameraPermission }) => {
 					barcodeTypes: ['code128', 'qr'],
 				}}
 				flash='auto'
-				onBarcodeScanned={scanData ? undefined : barcodeScannedHandler}
+				onBarcodeScanned={
+					scannedData ? undefined : barcodeScannedHandler
+				}
 			>
 				<Text style={styles.heading}>
 					Scan the barcode on your card
 				</Text>
 				<View style={styles.scannableContainer} />
+				<ButtonUI
+					backgroundColor={constants.BACKGROUND_COLOR}
+					color={constants.BLACK_TRANSPARENT}
+					onPress={manualEntryHandler}
+				>
+					Enter Manually
+				</ButtonUI>
 			</CameraView>
 		</View>
 	);
 };
 
 export default ScanBarcode;
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		width: constants.DEVICE_WIDTH,
 	},
+	noPermissionContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		rowGap: 20,
+	},
 	camera: {
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-		paddingBottom: 80,
 		rowGap: 40,
 	},
 	heading: {
@@ -64,11 +80,18 @@ const styles = StyleSheet.create({
 		fontFamily: 'inter',
 		fontWeight: '600',
 	},
+	permissionText: {
+		fontSize: 16.5,
+		fontFamily: 'inter',
+		color: constants.BLACK_TRANSPARENT,
+		textAlign: 'center',
+		fontWeight: '400',
+	},
 	scannableContainer: {
 		borderWidth: 1.5,
 		borderColor: '#fff',
-		width: constants.DEVICE_WIDTH - 40,
-		height: constants.DEVICE_HEIGHT * 0.2,
-		borderRadius: 10,
+		width: SCAN_SIZE,
+		height: SCAN_SIZE,
+		borderRadius: 20,
 	},
 });

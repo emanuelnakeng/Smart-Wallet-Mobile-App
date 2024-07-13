@@ -15,9 +15,14 @@ import { CardContext } from '../../utils/cardContextAPI';
 
 const IMAGE_SIZE = constants.DEVICE_WIDTH * 0.12;
 
-const CardSelectionInput = ({ onSelectCard }) => {
-	const { cardsData, searchChangeHandler, query, resetSearch } =
-		useContext(CardContext);
+const CardSelectionInput = () => {
+	const {
+		cardsData,
+		searchChangeHandler,
+		query,
+		resetSearch,
+		selectCardHandler,
+	} = useContext(CardContext);
 
 	return (
 		<View style={styles.container}>
@@ -33,7 +38,7 @@ const CardSelectionInput = ({ onSelectCard }) => {
 				/>
 				<Pressable style={styles.clearButton} onPress={resetSearch}>
 					<Ionicons
-						name='close'
+						name='close-circle-outline'
 						size={24}
 						color={constants.GRAY_COLOR}
 					/>
@@ -49,8 +54,9 @@ const CardSelectionInput = ({ onSelectCard }) => {
 					return (
 						<TouchableOpacity
 							style={styles.cardItem}
-							onPress={() => onSelectCard(item)}
-							activeOpacity={0.85}
+							onPress={() => selectCardHandler(item)}
+							activeOpacity={0.9}
+							key={item => item.company}
 						>
 							<Image
 								source={require('../../assets/logo/Group.png')}
@@ -84,8 +90,8 @@ const styles = StyleSheet.create({
 		borderWidth: 0.55,
 		color: constants.BLACK_TRANSPARENT,
 		fontWeight: '500',
-		fontSize: 16,
-		height: 48,
+		fontSize: 16.5,
+		height: 50,
 		fontFamily: 'inter',
 	},
 	clearButton: {

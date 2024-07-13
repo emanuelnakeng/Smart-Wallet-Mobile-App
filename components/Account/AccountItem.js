@@ -41,6 +41,6 @@ const styles = StyleSheet.create({
 		fontSize: 16.5,
 		fontWeight: '600',
 		lineHeight: 28,
-		color: 'rgba(0,0,0,0.8)',
+		color: constants.BLACK_TRANSPARENT,
 	},
 });

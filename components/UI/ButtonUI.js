@@ -1,24 +1,30 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import constants from '../../utils/constants';
 
-const ButtonUI = ({ children, backgroundColor, onPress }) => {
+const ButtonUI = ({ children, backgroundColor, onPress, width, color }) => {
 	return (
-		<Pressable
-			style={[styles.buttonContainer, { backgroundColor }]}
+		<TouchableOpacity
+			style={[
+				styles.buttonContainer,
+				{
+					backgroundColor,
+					width: width || constants.DEVICE_WIDTH - 40,
+				},
+			]}
 			onPress={onPress}
+			activeOpacity={0.8}
 		>
-			<Text style={[styles.buttonLabel, {}]}>{children}</Text>
-		</Pressable>
+			<Text style={[styles.buttonLabel, { color }]}>{children}</Text>
+		</TouchableOpacity>
 	);
 };
 export default ButtonUI;
 const styles = StyleSheet.create({
 	buttonContainer: {
-		height: constants.DEVICE_HEIGHT * 0.08,
+		height: constants.DEVICE_WIDTH * 0.14,
 		borderRadius: 15,
 		justifyContent: 'center',
 		alignItems: 'center',
-		width: constants.DEVICE_WIDTH - 40,
 		alignSelf: 'center',
 	},
 	buttonLabel: {

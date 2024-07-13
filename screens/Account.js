@@ -97,17 +97,17 @@ export default Account;
 const styles = StyleSheet.create({
 	accountSectionContainer: {
 		rowGap: 20,
-		paddingBottom: 30,
+		paddingBottom: 40,
 	},
 	sectionHeading: {
 		color: constants.GRAY_COLOR,
 		fontFamily: 'inter',
 		lineHeight: 22,
-		fontSize: 18.5,
+		fontSize: 17.5,
 		fontWeight: '600',
 	},
 	versionSectionContainer: {
-		paddingVertical: 30,
+		paddingVertical: 20,
 	},
 	version: {
 		textAlign: 'right',

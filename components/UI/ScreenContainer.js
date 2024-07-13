@@ -9,14 +9,17 @@ import {
 import FocusAwareStatusBar from './StatusAwareBar';
 import constants from '../../utils/constants';
 import { Ionicons } from '@expo/vector-icons';
+import { CardContext } from '../../utils/cardContextAPI';
+import { useContext } from 'react';
 
 const ScreenContainer = ({
 	children,
 	screenTitle,
 	hasActionIcon,
 	headerHeight,
-	onPressIcon,
 }) => {
+	const { modalOpenHandler } = useContext(CardContext);
+
 	return (
 		<View style={styles.screenContainer}>
 			<FocusAwareStatusBar barStyle='dark-content' />
@@ -26,11 +29,11 @@ const ScreenContainer = ({
 				>
 					<Text style={styles.screenTitle}>{screenTitle}</Text>
 					{hasActionIcon && (
-						<TouchableOpacity onPress={onPressIcon}>
+						<TouchableOpacity onPress={modalOpenHandler}>
 							<Ionicons
 								name='add-circle-outline'
 								size={38}
-								color={constants.BLACK_TRANSPARENT}
+								color={constants.BLACK_COLOR}
 							/>
 						</TouchableOpacity>
 					)}

@@ -1,10 +1,10 @@
-import { createContext, useState } from 'react';
+import { createContext, useReducer, useState } from 'react';
+import { createCardReducer } from './createCardReducer';
 
 export const CardContext = createContext();
 const data = require('../assets/cards.json');
 
 const CardContextProvider = ({ children }) => {
-	const [isModal, setIsModal] = useState(false);
 	const [selectedCard, setSelectedCard] = useState('');
 	const [cardsData, setCardsData] = useState(data);
 	const [query, setQuery] = useState({
@@ -12,14 +12,37 @@ const CardContextProvider = ({ children }) => {
 		isLoading: false,
 	});
 
+	const [scannedData, setScannedData] = useState('');
+	const [myCards, setMyCards] = useState([]);
+
+	const [state, dispatch] = useReducer(createCardReducer, {
+		isModal: false,
+		modalLabel: '',
+		modalContent: {
+			selectCard: false,
+			scanCard: false,
+			cardNumber: false,
+		},
+	});
+
+	const selectCardHandler = card => {
+		setSelectedCard(card);
+		dispatch({ type: 'SCANNING_CARD', payload: card.company });
+	};
+
+	const modalOpenHandler = () => {
+		dispatch({ type: 'SELECT_CARD' });
+	};
+
 	const onCloseModalHandler = () => {
-		setIsModal(!isModal);
+		dispatch({ type: 'CLOSE_MODAL' });
 		setQuery({
 			value: '',
 			isLoading: 'false',
 		});
-		setSelectedCard('');
 		setCardsData(data);
+		setSelectedCard('');
+		setScannedData('');
 	};
 
 	const resetSearch = () => {
@@ -28,6 +51,15 @@ const CardContextProvider = ({ children }) => {
 			isLoading: 'false',
 		});
 		setCardsData(data);
+	};
+
+	const barcodeScannedHandler = ({ type, data }) => {
+		setScannedData({ cardNumber: data, barcodeType: type });
+		dispatch({ type: 'CARD_NUMBER' });
+	};
+
+	const manualEntryHandler = () => {
+		dispatch({ type: 'CARD_NUMBER' });
 	};
 
 	const searchChangeHandler = enteredText => {
@@ -48,13 +80,20 @@ const CardContextProvider = ({ children }) => {
 		<CardContext.Provider
 			value={{
 				selectedCard,
-				setSelectedCard,
 				cardsData,
 				resetSearch,
 				searchChangeHandler,
 				query,
-				isModal,
 				onCloseModalHandler,
+				myCards,
+				setMyCards,
+				scannedData,
+				barcodeScannedHandler,
+				modalOpenHandler,
+				state,
+				selectCardHandler,
+				setScannedData,
+				manualEntryHandler,
 			}}
 		>
 			{children}

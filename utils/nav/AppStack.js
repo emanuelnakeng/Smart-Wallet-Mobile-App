@@ -35,15 +35,14 @@ const AppStack = () => {
 				},
 				tabBarStyle: {
 					backgroundColor: '#fff',
-					borderTopWidth: 0.55,
+					borderTopWidth: 0.8,
 					borderTopColor: '#f6f6f6',
-					height: 60,
+					rowGap: 3,
 				},
 				tabBarLabelStyle: {
 					fontFamily: 'inter',
 					fontSize: 11.5,
 					fontWeight: '500',
-					paddingBottom: 5,
 				},
 				headerShown: false,
 				tabBarAccessibilityLabel: 'Navigation bar',
