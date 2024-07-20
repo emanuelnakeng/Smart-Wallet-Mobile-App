@@ -1,14 +1,11 @@
 import LottieView from 'lottie-react-native';
 import { StyleSheet, View } from 'react-native';
-const LoadingLottie = () => {
+const LoadingLottie = props => {
 	return (
 		<View style={styles.animationContainer}>
 			<LottieView
 				autoPlay
-				style={{
-					width: 120,
-					height: 120,
-				}}
+				style={props.style}
 				source={require('../../assets/loading-animation.json')}
 			/>
 		</View>

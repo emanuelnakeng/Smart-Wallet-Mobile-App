@@ -5,15 +5,17 @@ import {
 	TouchableWithoutFeedback,
 	View,
 	Keyboard,
+	KeyboardAvoidingView,
 } from 'react-native';
 import constants from '../utils/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ArrowLeft from '../assets/icons/ArrowLeft';
 import ButtonUI from '../components/UI/ButtonUI';
 import FocusAwareStatusBar from '../components/UI/StatusAwareBar';
-import PhoneAuthInput from '../components/UI/PhoneAuthInput';
+import { Ionicons } from '@expo/vector-icons';
 
 const Login = ({ navigation }) => {
+	//Enable color scheme detection
+
 	return (
 		<View style={styles.outerContainer}>
 			<FocusAwareStatusBar barStyle='dark-content' />
@@ -22,17 +24,19 @@ const Login = ({ navigation }) => {
 					style={styles.navigationContainer}
 					onPress={() => navigation.goBack()}
 				>
-					<ArrowLeft />
+					<Ionicons
+						name='arrow-back'
+						size={28}
+						color={constants.BLACK_COLOR}
+					/>
 				</Pressable>
 				<TouchableWithoutFeedback
 					onPress={() => {
 						Keyboard.dismiss();
 					}}
 				>
-					<View style={styles.mainContentContainer}>
-						<Text style={styles.headingText}>
-							Continue with Phone Number
-						</Text>
+					<KeyboardAvoidingView style={styles.mainContentContainer}>
+						<Text style={styles.headingText}>Login</Text>
 						<Text style={styles.subHeading}>
 							We will send you a{' '}
 							<Text
@@ -48,14 +52,13 @@ const Login = ({ navigation }) => {
 							</Text>{' '}
 							to this phone number.
 						</Text>
-						<PhoneAuthInput />
 						<ButtonUI
 							backgroundColor={'#000'}
 							onPress={() => navigation.navigate('otp')}
 						>
 							Send OTP
 						</ButtonUI>
-					</View>
+					</KeyboardAvoidingView>
 				</TouchableWithoutFeedback>
 				<View style={styles.footerContainer}>
 					<Text style={styles.footerText}>
@@ -89,7 +92,7 @@ const styles = StyleSheet.create({
 		gap: 10,
 		flex: 1,
 		alignContent: 'center',
-		marginTop: constants.DEVICE_HEIGHT * 0.1,
+		// marginTop: constants.DEVICE_HEIGHT * 0.1,
 	},
 	headingText: {
 		fontSize: 28,

@@ -6,7 +6,7 @@ import FocusAwareStatusBar from '../components/UI/StatusAwareBar';
 
 const OnBoarding = ({ navigation }) => {
 	return (
-		<View style={styles.outerContainer}>
+		<View style={styles.container}>
 			<FocusAwareStatusBar barStyle='dark-content' />
 			<View style={styles.innerContainer}>
 				<Ecllipse />
@@ -19,7 +19,7 @@ const OnBoarding = ({ navigation }) => {
 				</View>
 				<View style={styles.actionContainer}>
 					<ButtonUI
-						backgroundColor={'#000'}
+						backgroundColor={constants.BLACK_COLOR}
 						onPress={() => navigation.navigate('login')}
 					>
 						Get started
@@ -32,7 +32,7 @@ const OnBoarding = ({ navigation }) => {
 export default OnBoarding;
 
 const styles = StyleSheet.create({
-	outerContainer: {
+	container: {
 		flex: 1,
 		backgroundColor: '#F1E2C6',
 	},
@@ -52,16 +52,16 @@ const styles = StyleSheet.create({
 	subHeading: {
 		fontSize: 16,
 		fontFamily: 'inter',
-		fontWeight: '400',
+		fontWeight: '500',
 		textAlign: 'center',
-		color: 'rgba(0, 0, 0, 0.75)',
-		lineHeight: 24,
+		color: constants.BLACK_TRANSPARENT,
+		lineHeight: 26,
 	},
 	heading: {
 		fontSize: 38,
-		lineHeight: 44,
+		lineHeight: 48,
 		fontWeight: '800',
-		color: '#000',
+		color: constants.BLACK_COLOR,
 		textAlign: 'center',
 		textTransform: 'capitalize',
 		fontFamily: 'inter',

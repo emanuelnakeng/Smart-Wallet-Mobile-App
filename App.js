@@ -1,36 +1,57 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import OnBoarding from './screens/OnBoarding';
+import {
+	NavigationContainer,
+	DefaultTheme,
+	DarkTheme,
+} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { useCallback, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import constants from './utils/constants';
 import AuthStack from './utils/nav/AuthStack';
 import AppStack from './utils/nav/AppStack';
 import CardContextProvider from './utils/cardContextAPI';
+import AuthContextProvider, { AuthContext } from './utils/authContextAPI';
+import { useColorScheme } from 'react-native';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './utils/firebaseConfig';
 
-export default function App() {
-	const [isInitializing, setIsInitializing] = useState(true);
-
+function Root() {
+	const { isUser, setIsUser } = useContext(AuthContext);
+	const colorScheme = useColorScheme();
 	const [fontsLoaded, fontError] = useFonts({
 		inter: constants.FONT,
 	});
 
 	useEffect(() => {
-		if (fontsLoaded) {
-			setIsInitializing(false);
-		}
+		// onAuthStateChanged(auth, user => {
+		// 	if (user) {
+		// 		setIsUser(user.uid);
+		// 	}
+		// });
 	}, []);
 
-	if (fontError) {
-		return null;
+	if (fontsLoaded) {
+		return (
+			<NavigationContainer
+				theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+			>
+				{isUser ? (
+					<CardContextProvider>
+						<AppStack />
+					</CardContextProvider>
+				) : (
+					<AuthStack />
+				)}
+			</NavigationContainer>
+		);
 	}
+}
 
+function App() {
 	return (
-		<NavigationContainer>
-			<CardContextProvider>
-				<AuthStack />
-			</CardContextProvider>
-		</NavigationContainer>
+		<AuthContextProvider>
+			<Root />
+		</AuthContextProvider>
 	);
 }
+
+export default App;

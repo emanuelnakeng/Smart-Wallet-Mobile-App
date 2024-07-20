@@ -14,7 +14,9 @@ const ButtonUI = ({ children, backgroundColor, onPress, width, color }) => {
 			onPress={onPress}
 			activeOpacity={0.8}
 		>
-			<Text style={[styles.buttonLabel, { color }]}>{children}</Text>
+			<Text style={[styles.buttonLabel, { color: color || '#fff' }]}>
+				{children}
+			</Text>
 		</TouchableOpacity>
 	);
 };
@@ -22,15 +24,14 @@ export default ButtonUI;
 const styles = StyleSheet.create({
 	buttonContainer: {
 		height: constants.DEVICE_WIDTH * 0.14,
-		borderRadius: 15,
+		borderRadius: 20,
 		justifyContent: 'center',
 		alignItems: 'center',
 		alignSelf: 'center',
 	},
 	buttonLabel: {
 		fontSize: 20,
-		color: '#fff',
-		fontWeight: '500',
+		fontWeight: '600',
 		fontFamily: 'inter',
 	},
 });
