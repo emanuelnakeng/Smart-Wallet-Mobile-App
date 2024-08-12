@@ -14,7 +14,7 @@ export const createCardReducer = (state, action) => {
 		return {
 			...state,
 			isModal: true,
-			modalLabel: 'Choose your Card',
+			modalLabel: 'Select card',
 			modalContent: {
 				selectCard: true,
 				scanCard: false,

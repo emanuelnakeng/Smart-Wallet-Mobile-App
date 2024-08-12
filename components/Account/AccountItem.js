@@ -8,15 +8,15 @@ const AccountItem = ({ icon, actionLabel }) => {
 			<View style={styles.labelIconContainer}>
 				<Ionicons
 					name={icon}
-					size={28}
+					size={24}
 					color={constants.ACCENT_COLOR}
 				/>
 				<Text style={styles.actionLabel}>{actionLabel}</Text>
 			</View>
 			<View>
 				<Ionicons
-					name='chevron-forward'
-					size={28}
+					name='chevron-forward-outline'
+					size={24.5}
 					color={constants.GRAY_COLOR}
 				/>
 			</View>
@@ -34,13 +34,11 @@ const styles = StyleSheet.create({
 	labelIconContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		columnGap: 20,
+		columnGap: 15,
 	},
 	actionLabel: {
-		fontFamily: 'inter',
+		fontFamily: 'inter-semiBold',
 		fontSize: 16.5,
-		fontWeight: '600',
-		lineHeight: 28,
 		color: constants.BLACK_TRANSPARENT,
 	},
 });

@@ -1,30 +1,29 @@
-import { StyleSheet, View } from 'react-native';
-import ScreenContainer from '../components/UI/ScreenContainer';
-import CardItem from '../components/Cards/CardItem';
 import CreateCard from '../components/Cards/CreateCard';
+import { useContext } from 'react';
+import { AppContext } from '../utils/appContext';
+import CardsList from '../components/Cards/CardsList';
+import ScreenContainer from '../components/UI/ScreenContainer';
+import { AuthContext } from '../utils/authContext';
+import { ThemeContext } from '../utils/themeContext';
 
-const starbucksLogo = require('../assets/logo/Group.png');
-const ikea = require('../assets/logo/logo.png');
+const Cards = ({ navigation }) => {
+	const { createCardModalHandler, userCards } = useContext(AppContext);
+	// const { isDark } = useContext(ThemeContext);
+	// console.log(isDark);
 
-const Cards = () => {
 	return (
-		<ScreenContainer screenTitle='My Cards' hasActionIcon>
-			<View style={styles.cardsContainer}>
-				<CardItem backgroundColor='#05714B' logo={starbucksLogo} />
-				<CardItem backgroundColor='#0058a3' logo={ikea} />
-			</View>
-			<CreateCard />
+		<ScreenContainer
+			hasActionIcon
+			onPressIcon={createCardModalHandler}
+			screenTitle='Cards'
+		>
+			<CardsList
+				data={userCards}
+				maxVisibleCards={4}
+				navigation={navigation}
+			/>
+			<CreateCard navigation={navigation} />
 		</ScreenContainer>
 	);
 };
 export default Cards;
-const styles = StyleSheet.create({
-	cardsContainer: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		justifyContent: 'space-between',
-		rowGap: 20,
-		flex: 1,
-		paddingTop: 20,
-	},
-});

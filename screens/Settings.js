@@ -1,16 +1,9 @@
-import {
-	Animated,
-	FlatList,
-	ScrollView,
-	StyleSheet,
-	Text,
-	View,
-} from 'react-native';
+import { Animated, ScrollView, StyleSheet, Text, View } from 'react-native';
 import ScreenContainer from '../components/UI/ScreenContainer';
 import AccountItem from '../components/Account/AccountItem';
 import constants from '../utils/constants';
 
-const Account = () => {
+const Settings = () => {
 	const AnimatedHeaderValue = new Animated.Value(0);
 	const headerMaxHeight = 60;
 	const headerMinHeight = 50;
@@ -22,9 +15,9 @@ const Account = () => {
 	});
 
 	return (
-		<ScreenContainer screenTitle='Account' headerHeight={animHeaderHeight}>
+		<ScreenContainer screenTitle='Settings' headerHeight={animHeaderHeight}>
 			<ScrollView
-				style={{ paddingTop: 10 }}
+				style={{ paddingTop: 10, paddingHorizontal: 20 }}
 				scrollEventThrottle={16}
 				showsVerticalScrollIndicator={false}
 				onScroll={Animated.event(
@@ -39,53 +32,37 @@ const Account = () => {
 				)}
 			>
 				<View style={styles.accountSectionContainer}>
-					<Text style={styles.sectionHeading}>Settings</Text>
-					<AccountItem icon='log-out-outline' actionLabel='Logout' />
-					<AccountItem
-						icon='color-palette-outline'
-						actionLabel='Theme'
-					/>
-					<AccountItem
-						icon='swap-vertical-outline'
-						actionLabel='Sort'
-					/>
+					<Text style={styles.sectionHeading}>Customize</Text>
+					<AccountItem icon='swap-horizontal' actionLabel='Sort By' />
+					<AccountItem icon='trash' actionLabel='Delete Cards' />
 				</View>
 				<View style={styles.accountSectionContainer}>
 					<Text style={styles.sectionHeading}>Contact</Text>
-					<AccountItem
-						icon='mail-outline'
-						actionLabel='Send Feedback'
-					/>
-					<AccountItem
-						icon='thumbs-up-outline'
-						actionLabel='Write a Review'
-					/>
-					<AccountItem
-						icon='earth-outline'
-						actionLabel='Our Website'
-					/>
+					<AccountItem icon='thumbs-up' actionLabel='Review App' />
+					<AccountItem icon='earth' actionLabel='Visit Website' />
+					<AccountItem icon='mail' actionLabel='Send Feedback' />
 				</View>
 				<View style={styles.accountSectionContainer}>
-					<Text style={styles.sectionHeading}>Legal</Text>
+					<Text style={styles.sectionHeading}>Support</Text>
+					<AccountItem icon='help-buoy' actionLabel='Help' />
 					<AccountItem
-						icon='document-text-outline'
-						actionLabel='Terms of Use'
+						icon='document-text'
+						actionLabel='Terms of Service'
 					/>
 					<AccountItem
-						icon='document-text-outline'
+						icon='document-text'
 						actionLabel='Privacy Policy'
 					/>
 				</View>
 				<View style={styles.versionSectionContainer}>
 					<Text style={styles.version}>
-						App Version{' '}
+						Version{' '}
 						<Text
 							style={{
-								fontWeight: '600',
-								color: constants.ACCENT_COLOR,
+								fontFamily: 'inter-bold',
 							}}
 						>
-							1.0.0
+							1.1.1
 						</Text>
 					</Text>
 				</View>
@@ -93,29 +70,24 @@ const Account = () => {
 		</ScreenContainer>
 	);
 };
-export default Account;
+export default Settings;
 const styles = StyleSheet.create({
 	accountSectionContainer: {
-		rowGap: 20,
+		rowGap: 25,
 		paddingBottom: 40,
 	},
 	sectionHeading: {
 		color: constants.GRAY_COLOR,
-		fontFamily: 'inter',
-		lineHeight: 22,
-		fontSize: 17.5,
-		fontWeight: '600',
+		fontFamily: 'inter-bold',
+		lineHeight: 24,
+		fontSize: 16.5,
 	},
 	versionSectionContainer: {
-		paddingVertical: 20,
+		alignItems: 'center',
 	},
 	version: {
-		textAlign: 'right',
-		fontFamily: 'inter',
-		fontSize: 13,
-		lineHeight: 18,
-		color: constants.GRAY_COLOR,
-		fontWeight: '500',
-		paddingHorizontal: 20,
+		fontFamily: 'inter-semiBold',
+		fontSize: 12.5,
+		color: constants.BLACK_TRANSPARENT,
 	},
 });

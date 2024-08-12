@@ -1,20 +1,34 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import constants from '../../utils/constants';
+import LoadingLottie from './LoadingLottie';
 
-const ButtonUI = ({ children, backgroundColor, onPress, width, color }) => {
+const ButtonUI = ({
+	children,
+	backgroundColor,
+	onPress,
+	width,
+	color,
+	isloading,
+}) => {
 	return (
 		<TouchableOpacity
 			style={[
 				styles.buttonContainer,
 				{
-					backgroundColor,
+					backgroundColor: backgroundColor || constants.BLACK_COLOR,
 					width: width || constants.DEVICE_WIDTH - 40,
 				},
 			]}
 			onPress={onPress}
 			activeOpacity={0.8}
 		>
-			<Text style={[styles.buttonLabel, { color }]}>{children}</Text>
+			{isloading ? (
+				<LoadingLottie style={{ width: 55, height: 55 }} />
+			) : (
+				<Text style={[styles.buttonLabel, { color: color || '#fff' }]}>
+					{children}
+				</Text>
+			)}
 		</TouchableOpacity>
 	);
 };
@@ -30,7 +44,6 @@ const styles = StyleSheet.create({
 	buttonLabel: {
 		fontSize: 20,
 		color: '#fff',
-		fontWeight: '500',
-		fontFamily: 'inter',
+		fontFamily: 'inter-semiBold',
 	},
 });

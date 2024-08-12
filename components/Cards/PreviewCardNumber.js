@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import {
 	Keyboard,
 	KeyboardAvoidingView,
@@ -9,48 +9,72 @@ import {
 	TouchableWithoutFeedback,
 	View,
 } from 'react-native';
-import { CardContext } from '../../utils/cardContextAPI';
 import constants from '../../utils/constants';
 import ButtonUI from '../UI/ButtonUI';
+import { AppContext } from '../../utils/appContext';
 
-const PreviewCardNumber = () => {
-	const { scannedData, setScannedData } = useContext(CardContext);
-	const [input, setInput] = useState({
-		cardNumber: {
-			inputValue: scannedData.cardNumber || '',
-			isValid: true,
-		},
+const PreviewCardNumber = ({ navigation }) => {
+	const {
+		isLoading,
+		isPreviewData,
+		scannedBarcode,
+		selectedCard,
+		setUserCards,
+		setIsLoading,
+		setIsPreviewData,
+		onCloseModalHandler,
+	} = useContext(AppContext);
+	const scannedCardRef = useRef();
+
+	const [scannedCardNumber, setScannedCardNumber] = useState({
+		value: scannedBarcode.cardNumber || '',
+		isValid: true,
 	});
-	const cardNumberChangeHandler = (inputId, enteredText) => {
-		setInput(currentInput => {
+
+	const cardNumberChangeHandler = enteredText => {
+		setScannedCardNumber(current => {
 			return {
-				...currentInput,
-				[inputId]: { inputValue: enteredText, isValid: true },
+				...current,
+				value: enteredText,
 			};
 		});
 	};
+	useEffect(() => {
+		scannedCardRef.current.focus();
+	}, []);
 
-	const cardNumberValid = input.cardNumber.inputValue.length > 0;
+	const inputIsValid = scannedCardNumber.value.trim().length > 0;
 
-	const saveCardHandler = () => {
-		const data = {
-			cardNumber: input.cardNumber.inputValue.trim(),
+	const onSaveCard = () => {
+		const cardData = {
+			cardName: selectedCard.cardName,
+			cardLogo: selectedCard.cardLogo,
+			cardColor: selectedCard.cardColor,
+			cardNumber: scannedCardNumber.value.trim(),
+			barcodeType: scannedBarcode.barcodeType,
+			cardId: `${selectedCard.cardName}${scannedCardNumber.value.trim()}`,
 		};
 
-		if (!cardNumberValid) {
-			setInput(currentInputValue => {
+		if (!inputIsValid) {
+			setScannedCardNumber(current => {
 				return {
-					cardNumber: {
-						inputValue: currentInputValue.cardNumber.inputValue,
-						isValid: false,
-					},
+					value: current.value,
+					isValid: false,
 				};
 			});
 			return;
 		}
-		setScannedData(data.cardNumber);
+		setIsLoading(true);
+		setTimeout(() => {
+			setUserCards(currentCards => [cardData, ...currentCards]);
+			setIsLoading(false);
+			setIsPreviewData(cardData);
+			onCloseModalHandler();
+			if (isPreviewData) {
+				navigation.navigate('details', cardData);
+			}
+		}, 2000);
 	};
-
 	return (
 		<KeyboardAvoidingView
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -62,33 +86,32 @@ const PreviewCardNumber = () => {
 						<Text style={styles.heading}>Card Number</Text>
 						<TextInput
 							placeholder='Enter your card number'
+							ref={scannedCardRef}
 							placeholderTextColor={constants.GRAY_COLOR}
 							style={[
 								styles.inputField,
 								{
-									borderColor: !cardNumberValid
+									borderColor: !scannedCardNumber.isValid
 										? 'red'
 										: constants.GRAY_COLOR,
-									borderWidth: !cardNumberValid ? 1 : 0.6,
 								},
 							]}
-							value={input.cardNumber.inputValue}
-							onChangeText={cardNumberChangeHandler.bind(
-								this,
-								'cardNumber'
-							)}
+							value={scannedCardNumber.value}
+							onChangeText={cardNumberChangeHandler}
 							autoCapitalize='none'
 							autoCorrect={false}
-							inputMode='numeric'
+							inputMode='text'
+							maxLength={20}
 						/>
 					</View>
 					<View style={styles.buttonContainer}>
 						<ButtonUI
 							backgroundColor={constants.BLACK_COLOR}
 							color={'#fff'}
-							onPress={saveCardHandler}
+							onPress={onSaveCard}
+							isloading={isLoading}
 						>
-							Save card
+							Save
 						</ButtonUI>
 					</View>
 				</View>
@@ -100,33 +123,35 @@ export default PreviewCardNumber;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-	},
-	inputField: {
-		borderRadius: 10,
-		paddingHorizontal: 20,
-		color: constants.BLACK_TRANSPARENT,
-		fontWeight: '500',
-		fontSize: 16.5,
-		height: 50,
-		fontFamily: 'inter',
-		width: constants.DEVICE_WIDTH - 40,
+		width: constants.DEVICE_WIDTH,
+		marginTop: 30,
 	},
 	innerContainer: {
 		flex: 1,
 		justifyContent: 'space-around',
 	},
+	inputField: {
+		borderColor: constants.GRAY_COLOR,
+		borderRadius: 10,
+		paddingLeft: 20,
+		paddingRight: 65,
+		borderWidth: 0.55,
+		color: constants.BLACK_TRANSPARENT,
+		fontSize: 16,
+		height: 48,
+		fontFamily: 'inter-semiBold',
+	},
 	inputContainer: {
 		flex: 1,
 		rowGap: 10,
+		paddingHorizontal: 20,
 	},
 	buttonContainer: {
-		height: constants.DEVICE_HEIGHT * 0.2,
+		height: constants.DEVICE_WIDTH * 0.4,
 	},
 	heading: {
-		fontFamily: 'inter',
-		fontSize: 16,
-		fontWeight: '600',
+		fontFamily: 'inter-semiBold',
+		fontSize: 16.5,
 		color: constants.BLACK_TRANSPARENT,
-		paddingLeft: 2,
 	},
 });

@@ -3,8 +3,13 @@ import constants from '../utils/constants';
 import ButtonUI from '../components/UI/ButtonUI';
 import Ecllipse from '../components/UI/Ecllipse';
 import FocusAwareStatusBar from '../components/UI/StatusAwareBar';
+import { useContext } from 'react';
+import { AuthContext } from '../utils/authContext';
 
 const OnBoarding = ({ navigation }) => {
+	const { signInUserHandler, isAuthenticating, authError } =
+		useContext(AuthContext);
+
 	return (
 		<View style={styles.outerContainer}>
 			<FocusAwareStatusBar barStyle='dark-content' />
@@ -20,10 +25,14 @@ const OnBoarding = ({ navigation }) => {
 				<View style={styles.actionContainer}>
 					<ButtonUI
 						backgroundColor={'#000'}
-						onPress={() => navigation.navigate('login')}
+						onPress={signInUserHandler}
+						isloading={isAuthenticating}
 					>
 						Get started
 					</ButtonUI>
+					{authError && (
+						<Text style={styles.errorText}>{authError}!</Text>
+					)}
 				</View>
 			</View>
 		</View>
@@ -34,7 +43,7 @@ export default OnBoarding;
 const styles = StyleSheet.create({
 	outerContainer: {
 		flex: 1,
-		backgroundColor: '#F1E2C6',
+		backgroundColor: '#E0B6EE',
 	},
 	innerContainer: {
 		flex: 1,
@@ -42,28 +51,33 @@ const styles = StyleSheet.create({
 	},
 	headingContainer: {
 		paddingHorizontal: 20,
-		rowGap: 10,
+		rowGap: 15,
 		marginTop: constants.DEVICE_HEIGHT * 0.15,
 	},
 	actionContainer: {
 		width: '100%',
-		paddingVertical: 30,
+		paddingVertical: 40,
+		rowGap: 20,
 	},
 	subHeading: {
 		fontSize: 16,
-		fontFamily: 'inter',
-		fontWeight: '400',
+		fontFamily: 'inter-regular',
 		textAlign: 'center',
-		color: 'rgba(0, 0, 0, 0.75)',
+		color: constants.BLACK_TRANSPARENT,
 		lineHeight: 24,
 	},
 	heading: {
 		fontSize: 38,
 		lineHeight: 44,
-		fontWeight: '800',
-		color: '#000',
+		color: constants.BLACK_COLOR,
 		textAlign: 'center',
 		textTransform: 'capitalize',
-		fontFamily: 'inter',
+		fontFamily: 'inter-extraBold',
+	},
+	errorText: {
+		color: 'red',
+		fontFamily: 'inter-regular',
+		textAlign: 'center',
+		fontSize: 12.5,
 	},
 });

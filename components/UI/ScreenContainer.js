@@ -8,18 +8,15 @@ import {
 } from 'react-native';
 import FocusAwareStatusBar from './StatusAwareBar';
 import constants from '../../utils/constants';
-import { Ionicons } from '@expo/vector-icons';
-import { CardContext } from '../../utils/cardContextAPI';
-import { useContext } from 'react';
+import { AntDesign } from '@expo/vector-icons';
 
 const ScreenContainer = ({
 	children,
 	screenTitle,
 	hasActionIcon,
 	headerHeight,
+	onPressIcon,
 }) => {
-	const { modalOpenHandler } = useContext(CardContext);
-
 	return (
 		<View style={styles.screenContainer}>
 			<FocusAwareStatusBar barStyle='dark-content' />
@@ -29,11 +26,11 @@ const ScreenContainer = ({
 				>
 					<Text style={styles.screenTitle}>{screenTitle}</Text>
 					{hasActionIcon && (
-						<TouchableOpacity onPress={modalOpenHandler}>
-							<Ionicons
-								name='add-circle-outline'
-								size={38}
-								color={constants.BLACK_COLOR}
+						<TouchableOpacity onPress={onPressIcon}>
+							<AntDesign
+								name='pluscircle'
+								size={36}
+								color={constants.ACCENT_COLOR}
 							/>
 						</TouchableOpacity>
 					)}
@@ -43,6 +40,7 @@ const ScreenContainer = ({
 		</View>
 	);
 };
+
 export default ScreenContainer;
 const styles = StyleSheet.create({
 	screenContainer: {
@@ -51,7 +49,6 @@ const styles = StyleSheet.create({
 	},
 	mainContentContainer: {
 		flex: 1,
-		paddingHorizontal: 20,
 	},
 	headerContainer: {
 		flexDirection: 'row',
@@ -61,10 +58,9 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 	},
 	screenTitle: {
-		fontFamily: 'inter',
-		fontSize: 24,
+		fontFamily: 'inter-extraBold',
+		fontSize: 28,
 		lineHeight: 40,
-		fontWeight: '700',
-		color: constants.BLACK_COLOR,
+		color: constants.BLACK_TRANSPARENT,
 	},
 });

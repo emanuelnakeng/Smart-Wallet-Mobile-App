@@ -3,23 +3,23 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import constants from '../../utils/constants';
 import ButtonUI from '../UI/ButtonUI';
 import { useContext } from 'react';
-import { CardContext } from '../../utils/cardContextAPI';
+import { AppContext } from '../../utils/appContext';
 
 const SCAN_SIZE = constants.DEVICE_WIDTH - 40;
 const ScanBarcode = () => {
-	const { scannedData, barcodeScannedHandler, manualEntryHandler } =
-		useContext(CardContext);
+	const { barcodeScannedHandler, onManualEntryHandler } =
+		useContext(AppContext);
 	const [permission, requestPermission] = useCameraPermissions();
 
-	if (!permission) {
+	if (!permission || !permission.granted) {
 		return (
 			<View style={styles.noPermissionContainer}>
 				<Text style={styles.permissionText}>
 					We need your permission to use the camera
 				</Text>
 				<ButtonUI
-					backgroundColor={constants.BLACK_TRANSPARENT}
-					width={250}
+					backgroundColor={constants.BLACK_COLOR}
+					width={constants.DEVICE_WIDTH * 0.75}
 					onPress={requestPermission}
 				>
 					Grant Permission
@@ -36,8 +36,8 @@ const ScanBarcode = () => {
 					barcodeTypes: ['code128', 'qr'],
 				}}
 				flash='auto'
-				onBarcodeScanned={
-					scannedData ? undefined : barcodeScannedHandler
+				onBarcodeScanned={result =>
+					barcodeScannedHandler(result.type, result.data)
 				}
 			>
 				<Text style={styles.heading}>
@@ -47,7 +47,7 @@ const ScanBarcode = () => {
 				<ButtonUI
 					backgroundColor={constants.BACKGROUND_COLOR}
 					color={constants.BLACK_TRANSPARENT}
-					onPress={manualEntryHandler}
+					onPress={onManualEntryHandler}
 				>
 					Enter Manually
 				</ButtonUI>
@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		width: constants.DEVICE_WIDTH,
+		paddingTop: 10,
 	},
 	noPermissionContainer: {
 		flex: 1,
@@ -72,20 +73,18 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-		rowGap: 40,
+		rowGap: 20,
 	},
 	heading: {
-		fontSize: 18.5,
+		fontSize: 20,
 		color: constants.BACKGROUND_COLOR,
-		fontFamily: 'inter',
-		fontWeight: '600',
+		fontFamily: 'inter-semiBold',
 	},
 	permissionText: {
-		fontSize: 16.5,
-		fontFamily: 'inter',
+		fontSize: 16,
+		fontFamily: 'inter-semiBold',
 		color: constants.BLACK_TRANSPARENT,
 		textAlign: 'center',
-		fontWeight: '400',
 	},
 	scannableContainer: {
 		borderWidth: 1.5,
@@ -93,5 +92,6 @@ const styles = StyleSheet.create({
 		width: SCAN_SIZE,
 		height: SCAN_SIZE,
 		borderRadius: 20,
+		marginBottom: 40,
 	},
 });

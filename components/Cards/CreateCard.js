@@ -2,7 +2,6 @@ import {
 	Modal,
 	Pressable,
 	StyleSheet,
-	TouchableOpacity,
 	TouchableWithoutFeedback,
 	View,
 	Text,
@@ -10,11 +9,11 @@ import {
 import constants from '../../utils/constants';
 import { useContext } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { CardContext } from '../../utils/cardContextAPI';
 import CreateCardModal from './CreateCardModal';
+import { AppContext } from '../../utils/appContext';
 
-const CreateCard = () => {
-	const { state, onCloseModalHandler } = useContext(CardContext);
+const CreateCard = ({ navigation }) => {
+	const { state, onCloseModalHandler } = useContext(AppContext);
 
 	return (
 		<Modal
@@ -37,18 +36,18 @@ const CreateCard = () => {
 							<Text style={styles.addCardText}>
 								{state.modalLabel}
 							</Text>
-							<TouchableOpacity
+							<Pressable
 								onPress={onCloseModalHandler}
 								style={styles.actionContainer}
 							>
 								<Ionicons
-									name='close-outline'
-									size={28}
+									name='close-circle'
+									size={32}
 									color={constants.ACCENT_COLOR}
 								/>
-							</TouchableOpacity>
+							</Pressable>
 						</View>
-						<CreateCardModal />
+						<CreateCardModal navigation={navigation} />
 					</View>
 				</TouchableWithoutFeedback>
 			</Pressable>
@@ -63,22 +62,20 @@ const styles = StyleSheet.create({
 		backgroundColor: constants.BACKGROUND_COLOR,
 		borderTopEndRadius: 20,
 		borderTopLeftRadius: 20,
-		alignItems: 'center',
 	},
 	addCardText: {
-		fontFamily: 'inter',
-		fontSize: 19.5,
-		fontWeight: '600',
-		color: constants.BLACK_COLOR,
+		fontFamily: 'inter-bold',
+		fontSize: 20.5,
+		color: constants.BLACK_TRANSPARENT,
+		textAlign: 'center',
 	},
 	headerContainer: {
-		width: constants.DEVICE_WIDTH - 40,
+		marginTop: 20,
+		paddingHorizontal: 20,
 		justifyContent: 'center',
-		padding: 20,
-		alignItems: 'center',
 	},
 	actionContainer: {
 		position: 'absolute',
-		right: 0,
+		right: 20,
 	},
 });
