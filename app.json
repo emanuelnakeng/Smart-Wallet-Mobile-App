@@ -11,18 +11,30 @@
 			"resizeMode": "contain",
 			"backgroundColor": "#FFFEFD"
 		},
-
 		"ios": {
-			"supportsTablet": true
+			"supportsTablet": true,
+			"bundleIdentifier": "com.emanueln.walletApp"
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#FFFEFD"
-			}
+			},
+			"package": "com.emanueln.walletApp"
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "159e9af6-acda-45c3-ae6a-b434da1886a8"
+			}
+		},
+		"runtimeVersion": {
+			"policy": "appVersion"
+		},
+		"updates": {
+			"url": "https://u.expo.dev/159e9af6-acda-45c3-ae6a-b434da1886a8"
 		}
 	}
 }

@@ -13,6 +13,7 @@ const AuthContextProvider = ({ children }) => {
 		setIsAuthenticating(true);
 		try {
 			await signInAnonymously(auth);
+			setIsAuthenticating(false);
 		} catch (error) {
 			setAuthError('Authentication failed');
 			setIsAuthenticating(false);

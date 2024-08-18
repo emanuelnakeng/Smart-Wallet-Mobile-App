@@ -10,6 +10,8 @@ import {
 	FlingGestureHandler,
 	State,
 } from 'react-native-gesture-handler';
+import { useContext } from 'react';
+import { AppContext } from '../../utils/appContext';
 
 const LOGO_SIZE = constants.DEVICE_WIDTH * 0.25;
 const CARD_WIDTH = constants.DEVICE_WIDTH - 40;
@@ -25,6 +27,8 @@ const CardItem = ({
 	maxVisibleCards,
 	navigation,
 }) => {
+	const { userCards } = useContext(AppContext);
+
 	const animatedStyle = useAnimatedStyle(() => {
 		const translateY = interpolate(
 			animatedValue.value,
@@ -96,17 +100,20 @@ const CardItem = ({
 						styles.container,
 						{
 							zIndex: cardsLength - index,
+							backgroundColor: card.cardColor,
 						},
 						animatedStyle,
 					]}
 				>
 					<TouchableOpacity
-						onPress={() => navigation.navigate('details', card)}
-						activeOpacity={0.98}
-						style={[
-							styles.cardContainer,
-							{ backgroundColor: card.cardColor },
-						]}
+						onPress={() => {
+							navigation.navigate(
+								'details',
+								userCards[currentIndex.value]
+							);
+						}}
+						activeOpacity={1}
+						style={[styles.cardInnerContaine]}
 					>
 						<Image
 							source={card.cardLogo}
@@ -123,25 +130,17 @@ export default CardItem;
 const styles = StyleSheet.create({
 	container: {
 		position: 'absolute',
-	},
-	cardContainer: {
-		flex: 1,
 		borderRadius: 20,
-		justifyContent: 'center',
-		alignItems: 'center',
 		width: CARD_WIDTH,
 		height: CARD_HEIGHT,
+	},
+	cardInnerContaine: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	logo: {
 		width: LOGO_SIZE,
 		height: LOGO_SIZE,
-	},
-	title: {
-		fontFamily: 'inter-ExtraBold',
-		color: constants.BACKGROUND_COLOR,
-		fontSize: 20,
-		textTransform: 'uppercase',
-		textAlign: 'center',
-		lineHeight: 40,
 	},
 });

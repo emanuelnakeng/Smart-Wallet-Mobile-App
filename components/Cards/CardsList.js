@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/native';
 import { StyleSheet, View, Text } from 'react-native';
 import CardItem from './CardItem';
 import { useSharedValue } from 'react-native-reanimated';
@@ -6,6 +7,7 @@ const CardsList = ({ data, maxVisibleCards, navigation }) => {
 	const animatedValue = useSharedValue(0);
 	const currentIndex = useSharedValue(0);
 	const prevIndex = useSharedValue(0);
+	const { colors } = useTheme();
 
 	if (data.length === 0) {
 		return (
@@ -14,14 +16,14 @@ const CardsList = ({ data, maxVisibleCards, navigation }) => {
 					No cards yet, tab
 					<Text
 						style={{
-							color: constants.ACCENT_COLOR,
+							color: colors.primary,
 							fontFamily: 'inter-semiBold',
 						}}
 					>
 						{' '}
 						+
 					</Text>{' '}
-					to get started
+					to add a card
 				</Text>
 			</View>
 		);

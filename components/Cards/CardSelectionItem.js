@@ -1,17 +1,18 @@
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import constants from '../../utils/constants';
+import { useTheme } from '@react-navigation/native';
 
 const IMAGE_SIZE = constants.DEVICE_WIDTH * 0.07;
 const CARD_WIDTH = constants.DEVICE_WIDTH * 0.16;
 const CARD_HEIGHT = constants.DEVICE_WIDTH * 0.1;
 
-const CardSelectionItem = ({ item, index, onCardSelection }) => {
+const CardSelectionItem = ({ item, onCardSelection }) => {
+	const { colors } = useTheme();
 	return (
 		<TouchableOpacity
 			style={styles.container}
 			onPress={() => onCardSelection(item)}
 			activeOpacity={0.9}
-			key={index}
 		>
 			<View
 				style={[
@@ -26,7 +27,9 @@ const CardSelectionItem = ({ item, index, onCardSelection }) => {
 				/>
 			</View>
 			<View style={styles.cardNameContainer}>
-				<Text style={styles.cardName}>{item.cardName}</Text>
+				<Text style={[styles.cardName, { color: colors.text }]}>
+					{item.cardName}
+				</Text>
 			</View>
 		</TouchableOpacity>
 	);
@@ -40,6 +43,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		columnGap: 20,
+		flex: 1,
 	},
 	cardPreview: {
 		width: CARD_WIDTH,
@@ -49,17 +53,17 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	cardName: {
-		fontSize: 17,
+		fontSize: 17.5,
 		fontFamily: 'inter-semiBold',
-		color: constants.BLACK_TRANSPARENT,
+		lineHeight: 20,
 	},
 	logo: {
 		width: IMAGE_SIZE,
 		height: IMAGE_SIZE,
-		borderRadius: 100,
 	},
 	cardNameContainer: {
 		justifyContent: 'center',
 		height: CARD_HEIGHT,
+		flex: 1,
 	},
 });

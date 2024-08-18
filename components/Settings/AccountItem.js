@@ -1,23 +1,27 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import constants from '../../utils/constants';
+import { useTheme } from '@react-navigation/native';
 
-const AccountItem = ({ icon, actionLabel }) => {
+const AccountItem = ({ icon, actionLabel, onPress }) => {
+	const { colors } = useTheme();
+
 	return (
-		<TouchableOpacity style={styles.itemContainer} activeOpacity={0.65}>
+		<TouchableOpacity
+			style={styles.itemContainer}
+			activeOpacity={0.65}
+			onPress={onPress}
+		>
 			<View style={styles.labelIconContainer}>
-				<Ionicons
-					name={icon}
-					size={24}
-					color={constants.ACCENT_COLOR}
-				/>
-				<Text style={styles.actionLabel}>{actionLabel}</Text>
+				<Ionicons name={icon} size={24} color={colors.primary} />
+				<Text style={[styles.actionLabel, { color: colors.text }]}>
+					{actionLabel}
+				</Text>
 			</View>
 			<View>
 				<Ionicons
 					name='chevron-forward-outline'
 					size={24.5}
-					color={constants.GRAY_COLOR}
+					color={colors.gray}
 				/>
 			</View>
 		</TouchableOpacity>
@@ -39,6 +43,8 @@ const styles = StyleSheet.create({
 	actionLabel: {
 		fontFamily: 'inter-semiBold',
 		fontSize: 16.5,
-		color: constants.BLACK_TRANSPARENT,
+	},
+	switchButtonStyle: {
+		transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }],
 	},
 });

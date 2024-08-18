@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import constants from '../../utils/constants';
 import LoadingLottie from './LoadingLottie';
+import { useTheme } from '@react-navigation/native';
 
 const ButtonUI = ({
 	children,
@@ -10,12 +11,14 @@ const ButtonUI = ({
 	color,
 	isloading,
 }) => {
+	const { colors } = useTheme();
+
 	return (
 		<TouchableOpacity
 			style={[
 				styles.buttonContainer,
 				{
-					backgroundColor: backgroundColor || constants.BLACK_COLOR,
+					backgroundColor: backgroundColor || colors.buttonBG,
 					width: width || constants.DEVICE_WIDTH - 40,
 				},
 			]}
@@ -25,9 +28,7 @@ const ButtonUI = ({
 			{isloading ? (
 				<LoadingLottie style={{ width: 55, height: 55 }} />
 			) : (
-				<Text style={[styles.buttonLabel, { color: color || '#fff' }]}>
-					{children}
-				</Text>
+				<Text style={[styles.buttonLabel, { color }]}>{children}</Text>
 			)}
 		</TouchableOpacity>
 	);
@@ -43,7 +44,6 @@ const styles = StyleSheet.create({
 	},
 	buttonLabel: {
 		fontSize: 20,
-		color: '#fff',
 		fontFamily: 'inter-semiBold',
 	},
 });

@@ -6,9 +6,9 @@ import {
 	View,
 	Animated,
 } from 'react-native';
-import FocusAwareStatusBar from './StatusAwareBar';
-import constants from '../../utils/constants';
+import FocusAwareStatusBar from './FocusAwareStatusBar';
 import { AntDesign } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 
 const ScreenContainer = ({
 	children,
@@ -17,20 +17,36 @@ const ScreenContainer = ({
 	headerHeight,
 	onPressIcon,
 }) => {
+	const theme = useTheme();
+
 	return (
-		<View style={styles.screenContainer}>
-			<FocusAwareStatusBar barStyle='dark-content' />
+		<View
+			style={[
+				styles.screenContainer,
+				{ backgroundColor: theme.colors.background },
+			]}
+		>
+			<FocusAwareStatusBar
+				barStyle={theme.dark ? 'light-content' : 'dark-content'}
+			/>
 			<SafeAreaView style={{ flex: 1 }}>
 				<Animated.View
 					style={[styles.headerContainer, { height: headerHeight }]}
 				>
-					<Text style={styles.screenTitle}>{screenTitle}</Text>
+					<Text
+						style={[
+							styles.screenTitle,
+							{ color: theme.colors.text },
+						]}
+					>
+						{screenTitle}
+					</Text>
 					{hasActionIcon && (
 						<TouchableOpacity onPress={onPressIcon}>
 							<AntDesign
 								name='pluscircle'
 								size={36}
-								color={constants.ACCENT_COLOR}
+								color={theme.colors.primary}
 							/>
 						</TouchableOpacity>
 					)}
@@ -45,7 +61,6 @@ export default ScreenContainer;
 const styles = StyleSheet.create({
 	screenContainer: {
 		flex: 1,
-		backgroundColor: constants.BACKGROUND_COLOR,
 	},
 	mainContentContainer: {
 		flex: 1,
@@ -61,6 +76,5 @@ const styles = StyleSheet.create({
 		fontFamily: 'inter-extraBold',
 		fontSize: 28,
 		lineHeight: 40,
-		color: constants.BLACK_TRANSPARENT,
 	},
 });

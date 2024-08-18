@@ -5,19 +5,18 @@ import { useFonts } from 'expo-font';
 import { useContext, useEffect, useState } from 'react';
 import AuthStack from './utils/nav/AuthStack';
 import AppStack from './utils/nav/AppStack';
-import AppContextProvider, { AppContext } from './utils/appContext';
+import AppContextProvider from './utils/appContext';
 import * as SplashScreen from 'expo-splash-screen';
 import AuthContextProvider, { AuthContext } from './utils/authContext';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './utils/firebase';
-import ThemeContextProvider, { ThemeContext } from './utils/themeContext';
-import { Appearance } from 'react-native';
+import { useColorScheme } from 'react-native';
+import theme from './utils/theme';
 
 function Root() {
 	const { isUser, setIsUser } = useContext(AuthContext);
 	const [isInitializing, setIsInitialising] = useState(true);
-	const { currentTheme, setCurrentTheme } = useContext(ThemeContext);
-	const colorScheme = Appearance.getColorScheme();
+	const colorScheme = useColorScheme();
 
 	const [fontsLoaded] = useFonts({
 		'inter-regular': require('./assets/fonts/Inter-Regular.ttf'),
@@ -28,22 +27,25 @@ function Root() {
 
 	useEffect(() => {
 		onAuthStateChanged(auth, user => {
-			user ? setIsUser(user.uid) : setIsUser('');
 			SplashScreen.hideAsync();
-			setIsInitialising(false);
+			if (user) {
+				setIsUser(user.uid);
+				setIsInitialising(false);
+			} else {
+				setIsUser('');
+				setIsInitialising(false);
+			}
 		});
 	}, [fontsLoaded]);
-
-	useEffect(() => {
-		// setIsDark(colorScheme === 'dark' ? true : false);
-	}, [currentTheme]);
 
 	if (isInitializing) {
 		SplashScreen.preventAutoHideAsync();
 	}
 
 	return (
-		<NavigationContainer>
+		<NavigationContainer
+			theme={colorScheme === 'dark' ? theme.dark : theme.light}
+		>
 			{isUser ? (
 				<AppContextProvider>
 					<AppStack />
@@ -58,11 +60,9 @@ function Root() {
 function App() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
-			<ThemeContextProvider>
-				<AuthContextProvider>
-					<Root />
-				</AuthContextProvider>
-			</ThemeContextProvider>
+			<AuthContextProvider>
+				<Root />
+			</AuthContextProvider>
 		</GestureHandlerRootView>
 	);
 }

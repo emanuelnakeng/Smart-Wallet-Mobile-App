@@ -12,6 +12,9 @@ import {
 import constants from '../../utils/constants';
 import ButtonUI from '../UI/ButtonUI';
 import { AppContext } from '../../utils/appContext';
+import { useTheme } from '@react-navigation/native';
+import { saveCard } from '../../utils/http';
+import { AuthContext } from '../../utils/authContext';
 
 const PreviewCardNumber = ({ navigation }) => {
 	const {
@@ -24,7 +27,9 @@ const PreviewCardNumber = ({ navigation }) => {
 		setIsPreviewData,
 		onCloseModalHandler,
 	} = useContext(AppContext);
+	const { isUser } = useContext(AuthContext);
 	const scannedCardRef = useRef();
+	const { colors } = useTheme();
 
 	const [scannedCardNumber, setScannedCardNumber] = useState({
 		value: scannedBarcode.cardNumber || '',
@@ -39,20 +44,20 @@ const PreviewCardNumber = ({ navigation }) => {
 			};
 		});
 	};
+
 	useEffect(() => {
 		scannedCardRef.current.focus();
 	}, []);
 
 	const inputIsValid = scannedCardNumber.value.trim().length > 0;
 
-	const onSaveCard = () => {
+	const onSaveCardHandler = async () => {
 		const cardData = {
 			cardName: selectedCard.cardName,
 			cardLogo: selectedCard.cardLogo,
 			cardColor: selectedCard.cardColor,
 			cardNumber: scannedCardNumber.value.trim(),
 			barcodeType: scannedBarcode.barcodeType,
-			cardId: `${selectedCard.cardName}${scannedCardNumber.value.trim()}`,
 		};
 
 		if (!inputIsValid) {
@@ -65,16 +70,26 @@ const PreviewCardNumber = ({ navigation }) => {
 			return;
 		}
 		setIsLoading(true);
-		setTimeout(() => {
-			setUserCards(currentCards => [cardData, ...currentCards]);
+		try {
+			const cardId = await saveCard(isUser, cardData);
+			setUserCards(currentCards => {
+				const newCardsArray = [
+					...currentCards,
+					{ ...cardData, cardId },
+				];
+				return newCardsArray;
+			});
 			setIsLoading(false);
-			setIsPreviewData(cardData);
+			setIsPreviewData({ ...cardData, cardId });
 			onCloseModalHandler();
 			if (isPreviewData) {
-				navigation.navigate('details', cardData);
+				navigation.navigate('details', { ...cardData, cardId });
 			}
-		}, 2000);
+		} catch (error) {
+			setIsLoading(true);
+		}
 	};
+
 	return (
 		<KeyboardAvoidingView
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -83,17 +98,20 @@ const PreviewCardNumber = ({ navigation }) => {
 			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 				<View style={styles.innerContainer}>
 					<View style={styles.inputContainer}>
-						<Text style={styles.heading}>Card Number</Text>
+						<Text style={[styles.heading, { color: colors.text }]}>
+							Card Number
+						</Text>
 						<TextInput
 							placeholder='Enter your card number'
 							ref={scannedCardRef}
-							placeholderTextColor={constants.GRAY_COLOR}
+							placeholderTextColor={colors.gray}
 							style={[
 								styles.inputField,
 								{
 									borderColor: !scannedCardNumber.isValid
-										? 'red'
-										: constants.GRAY_COLOR,
+										? colors.error
+										: colors.gray,
+									color: colors.text,
 								},
 							]}
 							value={scannedCardNumber.value}
@@ -101,17 +119,17 @@ const PreviewCardNumber = ({ navigation }) => {
 							autoCapitalize='none'
 							autoCorrect={false}
 							inputMode='text'
-							maxLength={20}
+							maxLength={15}
 						/>
 					</View>
 					<View style={styles.buttonContainer}>
 						<ButtonUI
-							backgroundColor={constants.BLACK_COLOR}
-							color={'#fff'}
-							onPress={onSaveCard}
+							backgroundColor={colors.buttonBG}
+							color={colors.background}
+							onPress={onSaveCardHandler}
 							isloading={isLoading}
 						>
-							Save
+							Save Card
 						</ButtonUI>
 					</View>
 				</View>
@@ -131,14 +149,12 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-around',
 	},
 	inputField: {
-		borderColor: constants.GRAY_COLOR,
 		borderRadius: 10,
 		paddingLeft: 20,
 		paddingRight: 65,
 		borderWidth: 0.55,
-		color: constants.BLACK_TRANSPARENT,
 		fontSize: 16,
-		height: 48,
+		height: 48.5,
 		fontFamily: 'inter-semiBold',
 	},
 	inputContainer: {
@@ -152,6 +168,5 @@ const styles = StyleSheet.create({
 	heading: {
 		fontFamily: 'inter-semiBold',
 		fontSize: 16.5,
-		color: constants.BLACK_TRANSPARENT,
 	},
 });

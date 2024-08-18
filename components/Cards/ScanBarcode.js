@@ -4,9 +4,12 @@ import constants from '../../utils/constants';
 import ButtonUI from '../UI/ButtonUI';
 import { useContext } from 'react';
 import { AppContext } from '../../utils/appContext';
+import { useTheme } from '@react-navigation/native';
 
 const SCAN_SIZE = constants.DEVICE_WIDTH - 40;
+
 const ScanBarcode = () => {
+	const { colors } = useTheme();
 	const { barcodeScannedHandler, onManualEntryHandler } =
 		useContext(AppContext);
 	const [permission, requestPermission] = useCameraPermissions();
@@ -14,13 +17,14 @@ const ScanBarcode = () => {
 	if (!permission || !permission.granted) {
 		return (
 			<View style={styles.noPermissionContainer}>
-				<Text style={styles.permissionText}>
-					We need your permission to use the camera
+				<Text style={[styles.permissionText, { color: colors.text }]}>
+					We need your permission to access the device camera
 				</Text>
 				<ButtonUI
-					backgroundColor={constants.BLACK_COLOR}
-					width={constants.DEVICE_WIDTH * 0.75}
+					backgroundColor={colors.text}
+					width={constants.DEVICE_WIDTH * 0.7}
 					onPress={requestPermission}
+					color={colors.background}
 				>
 					Grant Permission
 				</ButtonUI>
@@ -43,10 +47,10 @@ const ScanBarcode = () => {
 				<Text style={styles.heading}>
 					Scan the barcode on your card
 				</Text>
-				<View style={styles.scannableContainer} />
+				<View style={[styles.scannableContainer]} />
 				<ButtonUI
-					backgroundColor={constants.BACKGROUND_COLOR}
-					color={constants.BLACK_TRANSPARENT}
+					backgroundColor='#fff'
+					color='#000'
 					onPress={onManualEntryHandler}
 				>
 					Enter Manually
@@ -68,30 +72,33 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: 'center',
 		rowGap: 20,
+		paddingHorizontal: 20,
 	},
 	camera: {
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
 		rowGap: 20,
+		marginTop: 5,
 	},
 	heading: {
-		fontSize: 20,
-		color: constants.BACKGROUND_COLOR,
+		fontSize: 20.5,
+		lineHeight: 28,
 		fontFamily: 'inter-semiBold',
+		color: '#fff',
 	},
 	permissionText: {
 		fontSize: 16,
 		fontFamily: 'inter-semiBold',
-		color: constants.BLACK_TRANSPARENT,
 		textAlign: 'center',
+		lineHeight: 28,
 	},
 	scannableContainer: {
 		borderWidth: 1.5,
-		borderColor: '#fff',
 		width: SCAN_SIZE,
 		height: SCAN_SIZE,
 		borderRadius: 20,
 		marginBottom: 40,
+		borderColor: '#fff',
 	},
 });

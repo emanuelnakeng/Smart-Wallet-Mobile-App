@@ -1,5 +1,4 @@
 import { createContext, useReducer, useState } from 'react';
-import { Alert } from 'react-native';
 import { createCardReducer } from './createCardReducer';
 
 export const AppContext = createContext();
@@ -12,8 +11,9 @@ const AppContextProvider = ({ children }) => {
 		cardNumber: '',
 		barcodeType: '',
 	});
-	const [isLoading, setIsLoading] = useState();
+
 	const [isPreviewData, setIsPreviewData] = useState({});
+	const [isLoading, setIsLoading] = useState(false);
 
 	//Controls the create card modal content
 	const [state, dispatch] = useReducer(createCardReducer, {
@@ -46,25 +46,6 @@ const AppContextProvider = ({ children }) => {
 		dispatch({ type: 'CARD_NUMBER' });
 	};
 
-	const deleteCardHandler = cardIndex => {
-		const newCards = userCards.filter(
-			cardItem => cardItem.cardId !== cardIndex
-		);
-		Alert.alert('Confirm Delete', `Are you sure you want to delete card?`, [
-			{
-				text: 'No',
-				style: 'cancel',
-			},
-			{
-				text: 'Yes',
-				onPress: () => setUserCards(newCards),
-				style: 'destructive',
-			},
-		]);
-	};
-
-	const onSaveCardHandler = () => {};
-
 	return (
 		<AppContext.Provider
 			value={{
@@ -82,12 +63,10 @@ const AppContextProvider = ({ children }) => {
 				onManualEntryHandler: () => dispatch({ type: 'CARD_NUMBER' }),
 				onUserSearch: enteredText => setUserQuery(enteredText),
 				userQuery,
-				onSaveCardHandler,
-				isLoading,
-				deleteCardHandler,
 				isPreviewData,
-				setIsLoading,
 				setIsPreviewData,
+				isLoading,
+				setIsLoading,
 			}}
 		>
 			{children}

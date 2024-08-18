@@ -1,12 +1,5 @@
 import * as React from 'react';
-import Svg, {
-	Path,
-	Defs,
-	RadialGradient,
-	Stop,
-	G,
-	LinearGradient,
-} from 'react-native-svg';
+import Svg, { Path, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 const Ecllipse = props => (
 	<Svg

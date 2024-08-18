@@ -1,13 +1,14 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Cards from '../../screens/Cards';
 import Settings from '../../screens/Settings';
 import { Ionicons } from '@expo/vector-icons';
-import constants from '../constants';
 import CardStack from './CardStack';
+import { useTheme } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 const AppStack = () => {
+	const { colors } = useTheme();
+
 	return (
 		<Tab.Navigator
 			initialRouteName='Cards'
@@ -23,18 +24,14 @@ const AppStack = () => {
 						<Ionicons
 							name={iconName}
 							size={24}
-							color={
-								focused
-									? constants.ACCENT_COLOR
-									: constants.GRAY_COLOR
-							}
+							color={focused ? colors.primary : colors.gray}
 						/>
 					);
 				},
 				tabBarStyle: {
-					backgroundColor: '#fff',
-					borderTopWidth: 0.8,
-					borderTopColor: '#f6f6f6',
+					backgroundColor: colors.background,
+					borderTopWidth: 0.5,
+					borderTopColor: colors.border,
 				},
 				tabBarLabelStyle: {
 					fontFamily: 'inter-semiBold',
@@ -43,8 +40,8 @@ const AppStack = () => {
 				headerShown: false,
 				tabBarAccessibilityLabel: 'Navigation bar',
 				tabBarHideOnKeyboard: true,
-				tabBarInactiveTintColor: constants.GRAY_COLOR,
-				tabBarActiveTintColor: constants.ACCENT_COLOR,
+				tabBarInactiveTintColor: colors.gray,
+				tabBarActiveTintColor: colors.primary,
 			})}
 		>
 			<Tab.Screen name='Cards' component={CardStack} />
