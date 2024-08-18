@@ -12,7 +12,7 @@ const CardsList = ({ data, maxVisibleCards, navigation }) => {
 	if (data.length === 0) {
 		return (
 			<View style={styles.noResultContainer}>
-				<Text style={styles.noResultText}>
+				<Text style={[styles.noResultText, { color: colors.text }]}>
 					No cards yet, tab
 					<Text
 						style={{
@@ -59,6 +59,5 @@ const styles = StyleSheet.create({
 	noResultText: {
 		fontFamily: 'inter-regular',
 		fontSize: 16,
-		color: constants.GRAY_COLOR,
 	},
 });
