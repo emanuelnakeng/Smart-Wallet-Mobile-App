@@ -1,8 +1,14 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
+	ActivityIndicator,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
 
-const AccountItem = ({ icon, actionLabel, onPress }) => {
+const AccountItem = ({ icon, actionLabel, onPress, isLoading }) => {
 	const { colors } = useTheme();
 
 	return (
@@ -18,11 +24,15 @@ const AccountItem = ({ icon, actionLabel, onPress }) => {
 				</Text>
 			</View>
 			<View>
-				<Ionicons
-					name='chevron-forward-outline'
-					size={24.5}
-					color={colors.gray}
-				/>
+				{isLoading ? (
+					<ActivityIndicator />
+				) : (
+					<Ionicons
+						name='chevron-forward-outline'
+						size={22}
+						color={colors.gray}
+					/>
+				)}
 			</View>
 		</TouchableOpacity>
 	);

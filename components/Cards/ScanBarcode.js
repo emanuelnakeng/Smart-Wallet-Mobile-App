@@ -2,16 +2,20 @@ import { StyleSheet, Text, View } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import constants from '../../utils/constants';
 import ButtonUI from '../UI/ButtonUI';
-import { useContext } from 'react';
-import { AppContext } from '../../utils/appContext';
 import { useTheme } from '@react-navigation/native';
+import useCardStore from '../../store/card-store';
 
 const SCAN_SIZE = constants.DEVICE_WIDTH - 40;
 
 const ScanBarcode = () => {
 	const { colors } = useTheme();
-	const { barcodeScannedHandler, onManualEntryHandler } =
-		useContext(AppContext);
+
+	const { scannedBarcodeHandler, manualEntryHandler } = useCardStore(
+		state => ({
+			scannedBarcodeHandler: state.scannedBarcodeHandler,
+			manualEntryHandler: state.manualEntryHandler,
+		})
+	);
 	const [permission, requestPermission] = useCameraPermissions();
 
 	if (!permission || !permission.granted) {
@@ -40,8 +44,8 @@ const ScanBarcode = () => {
 					barcodeTypes: ['code128', 'qr'],
 				}}
 				flash='auto'
-				onBarcodeScanned={result =>
-					barcodeScannedHandler(result.type, result.data)
+				onBarcodeScanned={scanned =>
+					scannedBarcodeHandler(scanned.type, scanned.data)
 				}
 			>
 				<Text style={styles.heading}>
@@ -51,7 +55,7 @@ const ScanBarcode = () => {
 				<ButtonUI
 					backgroundColor='#fff'
 					color='#000'
-					onPress={onManualEntryHandler}
+					onPress={manualEntryHandler}
 				>
 					Enter Manually
 				</ButtonUI>

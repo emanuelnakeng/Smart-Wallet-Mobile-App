@@ -7,22 +7,27 @@ import {
 	Text,
 } from 'react-native';
 import constants from '../../utils/constants';
-import { useContext } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import CreateCardModal from './CreateCardModal';
-import { AppContext } from '../../utils/appContext';
+import CreateCardModalContent from './CreateCardModalContent';
 import { useTheme } from '@react-navigation/native';
+import useCardStore from '../../store/card-store';
 
 const CreateCard = ({ navigation }) => {
-	const { state, onCloseModalHandler } = useContext(AppContext);
 	const { colors } = useTheme();
+	const { modalLabel, closeCreateCardModal, isModal } = useCardStore(
+		state => ({
+			modalLabel: state.modalLabel,
+			closeCreateCardModal: state.closeCreateCardModal,
+			isModal: state.isModal,
+		})
+	);
 
 	return (
 		<Modal
 			transparent
-			visible={state.isModal}
+			visible={isModal}
 			animationType='slide'
-			onRequestClose={onCloseModalHandler}
+			onRequestClose={closeCreateCardModal}
 		>
 			<Pressable
 				style={{
@@ -30,7 +35,7 @@ const CreateCard = ({ navigation }) => {
 					flex: 1,
 					justifyContent: 'flex-end',
 				}}
-				onPress={onCloseModalHandler}
+				onPress={closeCreateCardModal}
 			>
 				<TouchableWithoutFeedback style={{ flex: 1 }}>
 					<View
@@ -48,10 +53,10 @@ const CreateCard = ({ navigation }) => {
 									{ color: colors.text },
 								]}
 							>
-								{state.modalLabel}
+								{modalLabel}
 							</Text>
 							<Pressable
-								onPress={onCloseModalHandler}
+								onPress={closeCreateCardModal}
 								style={styles.actionContainer}
 							>
 								<Ionicons
@@ -61,7 +66,7 @@ const CreateCard = ({ navigation }) => {
 								/>
 							</Pressable>
 						</View>
-						<CreateCardModal navigation={navigation} />
+						<CreateCardModalContent navigation={navigation} />
 					</View>
 				</TouchableWithoutFeedback>
 			</Pressable>

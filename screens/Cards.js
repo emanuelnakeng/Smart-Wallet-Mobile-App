@@ -1,33 +1,36 @@
 import CreateCard from '../components/Cards/CreateCard';
-import { useContext, useEffect, useState } from 'react';
-import { AppContext } from '../utils/appContext';
+import { useEffect, useState } from 'react';
 import CardsList from '../components/Cards/CardsList';
 import ScreenContainer from '../components/UI/ScreenContainer';
 import LoadingLottie from '../components/UI/LoadingLottie';
 import { View } from 'react-native';
 import constants from '../utils/constants';
 import { fetchUserCards } from '../utils/http';
-import { AuthContext } from '../utils/authContext';
+import useCardStore from '../store/card-store';
+import useAuthStore from '../store/auth-store';
 
 const Cards = ({ navigation }) => {
-	const { createCardModalHandler, userCards, setUserCards } =
-		useContext(AppContext);
-	const { isUser } = useContext(AuthContext);
+	const { openCreateCardModal, getUserCards, userCards } = useCardStore(
+		state => ({
+			openCreateCardModal: state.openCreateCardModal,
+			isUser: state.isUser,
+			getUserCards: state.getUserCards,
+			userCards: state.userCards,
+		})
+	);
+	const isUser = useAuthStore(state => state.isUser);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchUserCardsHandler = async () => {
-		try {
-			const res = await fetchUserCards(isUser);
-			const cardsData = [];
-			res.forEach(doc =>
-				cardsData.push({ ...doc.data(), cardId: doc.id })
-			);
-			setUserCards(cardsData);
-			setIsLoading(false);
-		} catch (error) {
-			console.log(error);
-		}
+		const response = await fetchUserCards(isUser);
+		const cardsData = [];
+		response.forEach(doc =>
+			cardsData.push({ ...doc.data(), cardId: doc.id })
+		);
+		getUserCards(cardsData);
+		setIsLoading(false);
 	};
+
 	useEffect(() => {
 		fetchUserCardsHandler();
 	}, []);
@@ -35,7 +38,7 @@ const Cards = ({ navigation }) => {
 	return (
 		<ScreenContainer
 			hasActionIcon
-			onPressIcon={createCardModalHandler}
+			onPressIcon={openCreateCardModal}
 			screenTitle='Cards'
 		>
 			{isLoading ? (

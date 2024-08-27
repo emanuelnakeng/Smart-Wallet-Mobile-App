@@ -6,7 +6,7 @@ const IMAGE_SIZE = constants.DEVICE_WIDTH * 0.07;
 const CARD_WIDTH = constants.DEVICE_WIDTH * 0.16;
 const CARD_HEIGHT = constants.DEVICE_WIDTH * 0.1;
 
-const CardSelectionItem = ({ item, onCardSelection }) => {
+const CardsOptionItem = ({ item, onCardSelection }) => {
 	const { colors } = useTheme();
 	return (
 		<TouchableOpacity
@@ -35,7 +35,7 @@ const CardSelectionItem = ({ item, onCardSelection }) => {
 	);
 };
 
-export default CardSelectionItem;
+export default CardsOptionItem;
 
 const styles = StyleSheet.create({
 	container: {

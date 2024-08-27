@@ -10,19 +10,21 @@ import ScreenContainer from '../components/UI/ScreenContainer';
 import AccountItem from '../components/Settings/AccountItem';
 import * as WebBrowser from 'expo-web-browser';
 import { useTheme } from '@react-navigation/native';
-import { useContext, useState } from 'react';
-import { AppContext } from '../utils/appContext';
-import { deleteAllCardsUser } from '../utils/http';
-import { AuthContext } from '../utils/authContext';
-import { auth } from '../utils/firebase';
+import useAuthStore from '../store/auth-store';
+import useCardStore from '../store/card-store';
+import { useState } from 'react';
 
 const app = require('../app.json');
 
 const Settings = () => {
 	const { colors } = useTheme();
-	const { setUserCards } = useContext(AppContext);
-	const { isUser } = useContext(AuthContext);
-	const [isVisible, setIsVisible] = useState(false);
+	const { logoutUser, isUser } = useAuthStore(state => ({
+		logoutUser: state.logoutUser,
+		isUser: state.isUser,
+	}));
+	const clearCards = useCardStore(state => state.clearCards);
+	const [isRefreshing, setIsRefreshing] = useState(false);
+
 	const AnimatedHeaderValue = new Animated.Value(0);
 	const headerMaxHeight = 60;
 	const headerMinHeight = 50;
@@ -38,14 +40,10 @@ const Settings = () => {
 		await WebBrowser.openBrowserAsync(link);
 	};
 
-	const closeModalHandler = () => {
-		setIsVisible(false);
-	};
-
-	const resetAppHandler = async () => {
+	const resetAppHandler = () => {
 		Alert.alert(
-			'Confirm Deletion',
-			`Are you sure? This action cannot be undone.`,
+			'Confirm Clear',
+			`Are you sure? This action will clear all app data.`,
 			[
 				{
 					text: 'No',
@@ -54,9 +52,10 @@ const Settings = () => {
 				{
 					text: 'Yes',
 					onPress: async () => {
-						await deleteAllCardsUser(isUser);
-						await auth.signOut();
-						setUserCards('');
+						setIsRefreshing(true);
+						await logoutUser(isUser);
+						clearCards();
+						setIsRefreshing(false);
 					},
 					style: 'destructive',
 				},
@@ -88,17 +87,17 @@ const Settings = () => {
 						Customize
 					</Text>
 					<AccountItem
-						icon='lock-open'
-						actionLabel='Permissions'
+						icon='trash-sharp'
+						actionLabel='Refresh App'
+						onPress={resetAppHandler}
+						isLoading={isRefreshing}
+					/>
+					<AccountItem
+						icon='scan-outline'
+						actionLabel='Camera Permissions'
 						onPress={() =>
 							openLinkHandler('https://www.google.com')
 						}
-						//link to app permissions
-					/>
-					<AccountItem
-						icon='trash-sharp'
-						actionLabel='Clear Data'
-						onPress={resetAppHandler}
 					/>
 				</View>
 				<View style={styles.accountSectionContainer}>

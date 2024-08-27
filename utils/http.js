@@ -5,14 +5,12 @@ import {
 	doc,
 	getDocs,
 	query,
-	setDoc,
 	where,
 	writeBatch,
 } from 'firebase/firestore';
 import { db } from './firebase';
 
 const usersCardsRef = collection(db, 'Users Cards');
-const newCardRef = doc(usersCardsRef);
 
 const saveCard = async (userId, cardData) => {
 	const validatedBarcodeType = isNaN(cardData.cardNumber)

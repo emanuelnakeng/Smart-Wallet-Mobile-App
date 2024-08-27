@@ -11,30 +11,32 @@ import {
 } from 'react-native';
 import constants from '../../utils/constants';
 import ButtonUI from '../UI/ButtonUI';
-import { AppContext } from '../../utils/appContext';
 import { useTheme } from '@react-navigation/native';
 import { saveCard } from '../../utils/http';
-import { AuthContext } from '../../utils/authContext';
+import useAuthStore from '../../store/auth-store';
+import useCardStore from '../../store/card-store';
 
-const PreviewCardNumber = ({ navigation }) => {
+const ConfirmCardDetails = ({ navigation }) => {
+	const [isLoading, setIsLoading] = useState(false);
 	const {
-		isLoading,
-		isPreviewData,
-		scannedBarcode,
 		selectedCard,
-		setUserCards,
-		setIsLoading,
-		setIsPreviewData,
-		onCloseModalHandler,
-	} = useContext(AppContext);
-	const { isUser } = useContext(AuthContext);
-	const scannedCardRef = useRef();
-	const { colors } = useTheme();
-
+		addCardHandler,
+		closeCreateCardModal,
+		isPreviewData,
+	} = useCardStore(state => ({
+		selectedCard: state.selectedCard,
+		addCardHandler: state.addCardHandler,
+		closeCreateCardModal: state.closeCreateCardModal,
+		isPreviewData: isPreviewData,
+	}));
 	const [scannedCardNumber, setScannedCardNumber] = useState({
-		value: scannedBarcode.cardNumber || '',
+		value: selectedCard.scannedBarcode || '',
 		isValid: true,
 	});
+
+	const isUser = useAuthStore(state => state.isUser);
+	const scannedCardRef = useRef();
+	const { colors } = useTheme();
 
 	const cardNumberChangeHandler = enteredText => {
 		setScannedCardNumber(current => {
@@ -57,7 +59,7 @@ const PreviewCardNumber = ({ navigation }) => {
 			cardLogo: selectedCard.cardLogo,
 			cardColor: selectedCard.cardColor,
 			cardNumber: scannedCardNumber.value.trim(),
-			barcodeType: scannedBarcode.barcodeType,
+			barcodeType: selectedCard.barcodeType,
 		};
 
 		if (!inputIsValid) {
@@ -72,21 +74,12 @@ const PreviewCardNumber = ({ navigation }) => {
 		setIsLoading(true);
 		try {
 			const cardId = await saveCard(isUser, cardData);
-			setUserCards(currentCards => {
-				const newCardsArray = [
-					...currentCards,
-					{ ...cardData, cardId },
-				];
-				return newCardsArray;
-			});
+			addCardHandler(cardId, cardData);
+			closeCreateCardModal();
+			navigation.navigate('details', { ...cardData, cardId });
 			setIsLoading(false);
-			setIsPreviewData({ ...cardData, cardId });
-			onCloseModalHandler();
-			if (isPreviewData) {
-				navigation.navigate('details', { ...cardData, cardId });
-			}
 		} catch (error) {
-			setIsLoading(true);
+			setIsLoading(false);
 		}
 	};
 
@@ -137,7 +130,7 @@ const PreviewCardNumber = ({ navigation }) => {
 		</KeyboardAvoidingView>
 	);
 };
-export default PreviewCardNumber;
+export default ConfirmCardDetails;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,

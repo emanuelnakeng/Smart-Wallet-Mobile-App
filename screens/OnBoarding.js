@@ -3,14 +3,19 @@ import constants from '../utils/constants';
 import ButtonUI from '../components/UI/ButtonUI';
 import Ecllipse from '../components/UI/Ecllipse';
 import FocusAwareStatusBar from '../components/UI/FocusAwareStatusBar';
-import { useContext } from 'react';
-import { AuthContext } from '../utils/authContext';
 import { useTheme } from '@react-navigation/native';
+import useAuthStore from '../store/auth-store';
 
 const OnBoarding = () => {
 	const { colors } = useTheme();
-	const { signInUserHandler, isAuthenticating, authError } =
-		useContext(AuthContext);
+
+	const { signInUser, isAuthenticating, isAuthError } = useAuthStore(
+		state => ({
+			signInUser: state.signInUser,
+			isAuthenticating: state.isAuthenticating,
+			isAuthError: state.isAuthError,
+		})
+	);
 
 	return (
 		<View
@@ -34,17 +39,17 @@ const OnBoarding = () => {
 				<View style={styles.actionContainer}>
 					<ButtonUI
 						backgroundColor='#000'
-						onPress={signInUserHandler}
+						onPress={signInUser}
 						isloading={isAuthenticating}
 						color='#fff'
 					>
 						Get started
 					</ButtonUI>
-					{authError && (
+					{isAuthError && (
 						<Text
 							style={[styles.errorText, { color: colors.error }]}
 						>
-							{authError}!
+							{isAuthError}!
 						</Text>
 					)}
 				</View>
