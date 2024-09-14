@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 
 const initialStore = {
@@ -16,6 +17,8 @@ const initialStore = {
 		scanBarcode: false,
 		confirmEntry: false,
 	},
+	isLoading: false,
+	sortOrder: 'Name (A - Z)',
 };
 
 const useCardStore = create(set => ({
@@ -85,7 +88,7 @@ const useCardStore = create(set => ({
 		//Adds new card to current array
 		const newCard = { ...cardData, cardId };
 		set(state => ({
-			userCards: [...state.userCards, newCard],
+			userCards: [newCard, ...state.userCards],
 		}));
 	},
 	deleteCard: id =>
@@ -93,11 +96,46 @@ const useCardStore = create(set => ({
 		set(state => ({
 			userCards: state.userCards.filter(item => item.cardId !== id),
 		})),
-	getUserCards: cards =>
-		set(state => ({
-			userCards: [...state.userCards, ...cards],
-		})),
+	userCardsHandler: async cards => {
+		const order = await AsyncStorage.getItem('selectedOrder');
+		if (typeof order === 'string') {
+			if (order === 'Name (A - Z)') {
+				set(state => ({
+					sortOrder: order,
+					userCards: cards.sort((a, b) =>
+						a.cardName.localeCompare(b.cardName)
+					),
+				}));
+			} else if (order === 'Name (Z - A)') {
+				set(state => ({
+					sortOrder: order,
+					userCards: cards.sort((a, b) =>
+						b.cardName.localeCompare(a.cardName)
+					),
+				}));
+			}
+		}
+	},
 	clearCards: () => set(state => ({ userCards: [] })),
+	toggleLoading: () => set(state => ({ isLoading: !state.isLoading })),
+	sortCardsHandler: async selectedOrder => {
+		await AsyncStorage.setItem('selectedOrder', selectedOrder);
+		if (selectedOrder === 'Name (A - Z)') {
+			set(state => ({
+				sortOrder: selectedOrder,
+				userCards: state.userCards.sort((a, b) =>
+					a.cardName.localeCompare(b.cardName)
+				),
+			}));
+		} else if (selectedOrder === 'Name (Z - A)') {
+			set(state => ({
+				sortOrder: selectedOrder,
+				userCards: state.userCards.sort((a, b) =>
+					b.cardName.localeCompare(a.cardName)
+				),
+			}));
+		}
+	},
 }));
 
 export default useCardStore;

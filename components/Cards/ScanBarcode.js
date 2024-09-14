@@ -30,7 +30,7 @@ const ScanBarcode = () => {
 					onPress={requestPermission}
 					color={colors.background}
 				>
-					Grant Permission
+					Grant permission
 				</ButtonUI>
 			</View>
 		);
@@ -57,7 +57,7 @@ const ScanBarcode = () => {
 					color='#000'
 					onPress={manualEntryHandler}
 				>
-					Enter Manually
+					Enter manually
 				</ButtonUI>
 			</CameraView>
 		</View>

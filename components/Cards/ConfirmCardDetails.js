@@ -1,15 +1,5 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import {
-	Keyboard,
-	KeyboardAvoidingView,
-	Platform,
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableWithoutFeedback,
-	View,
-} from 'react-native';
-import constants from '../../utils/constants';
+import { useState } from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import ButtonUI from '../UI/ButtonUI';
 import { useTheme } from '@react-navigation/native';
 import { saveCard } from '../../utils/http';
@@ -35,7 +25,7 @@ const ConfirmCardDetails = ({ navigation }) => {
 	});
 
 	const isUser = useAuthStore(state => state.isUser);
-	const scannedCardRef = useRef();
+
 	const { colors } = useTheme();
 
 	const cardNumberChangeHandler = enteredText => {
@@ -46,10 +36,6 @@ const ConfirmCardDetails = ({ navigation }) => {
 			};
 		});
 	};
-
-	useEffect(() => {
-		scannedCardRef.current.focus();
-	}, []);
 
 	const inputIsValid = scannedCardNumber.value.trim().length > 0;
 
@@ -84,82 +70,70 @@ const ConfirmCardDetails = ({ navigation }) => {
 	};
 
 	return (
-		<KeyboardAvoidingView
-			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-			style={styles.container}
-		>
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-				<View style={styles.innerContainer}>
-					<View style={styles.inputContainer}>
-						<Text style={[styles.heading, { color: colors.text }]}>
-							Card Number
-						</Text>
-						<TextInput
-							placeholder='Enter your card number'
-							ref={scannedCardRef}
-							placeholderTextColor={colors.gray}
-							style={[
-								styles.inputField,
-								{
-									borderColor: !scannedCardNumber.isValid
-										? colors.error
-										: colors.gray,
-									color: colors.text,
-								},
-							]}
-							value={scannedCardNumber.value}
-							onChangeText={cardNumberChangeHandler}
-							autoCapitalize='none'
-							autoCorrect={false}
-							inputMode='text'
-							maxLength={15}
-						/>
-					</View>
-					<View style={styles.buttonContainer}>
-						<ButtonUI
-							backgroundColor={colors.buttonBG}
-							color={colors.background}
-							onPress={onSaveCardHandler}
-							isloading={isLoading}
-						>
-							Save Card
-						</ButtonUI>
-					</View>
+		<View style={styles.container}>
+			<View style={styles.innerContainer}>
+				<View style={styles.inputContainer}>
+					<Text style={[styles.heading, { color: colors.text }]}>
+						Card Number
+					</Text>
+					<TextInput
+						placeholder='Enter your card number'
+						placeholderTextColor={colors.gray}
+						style={[
+							styles.inputField,
+							{
+								borderColor: !scannedCardNumber.isValid
+									? colors.error
+									: colors.gray,
+								color: colors.text,
+							},
+						]}
+						value={scannedCardNumber.value}
+						onChangeText={cardNumberChangeHandler}
+						autoCapitalize='none'
+						autoCorrect={false}
+						inputMode='text'
+						maxLength={30}
+					/>
 				</View>
-			</TouchableWithoutFeedback>
-		</KeyboardAvoidingView>
+				<ButtonUI
+					backgroundColor={colors.buttonBG}
+					color={colors.background}
+					onPress={onSaveCardHandler}
+					isloading={isLoading}
+				>
+					Save card
+				</ButtonUI>
+			</View>
+		</View>
 	);
 };
 export default ConfirmCardDetails;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		width: constants.DEVICE_WIDTH,
 		marginTop: 30,
 	},
 	innerContainer: {
 		flex: 1,
-		justifyContent: 'space-around',
+		rowGap: 40,
 	},
 	inputField: {
 		borderRadius: 10,
 		paddingLeft: 20,
-		paddingRight: 65,
+		paddingRight: 30,
 		borderWidth: 0.55,
 		fontSize: 16,
 		height: 48.5,
 		fontFamily: 'inter-semiBold',
 	},
 	inputContainer: {
-		flex: 1,
 		rowGap: 10,
 		paddingHorizontal: 20,
-	},
-	buttonContainer: {
-		height: constants.DEVICE_WIDTH * 0.4,
 	},
 	heading: {
 		fontFamily: 'inter-semiBold',
 		fontSize: 16.5,
+		lineHeight: 22,
 	},
 });

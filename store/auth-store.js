@@ -30,8 +30,8 @@ const useAuthStore = create(set => ({
 	setUserHandler: userId => set(state => ({ isUser: userId })),
 	logoutUser: async userId => {
 		set(state => ({ isAuthenticating: true }));
-		await auth.signOut();
 		await deleteAllCardsUser(userId);
+		await auth.signOut();
 		set(state => ({ isUser: '', isAuthenticating: false }));
 	},
 }));
