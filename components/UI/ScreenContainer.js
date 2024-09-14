@@ -9,6 +9,7 @@ import {
 import FocusAwareStatusBar from './FocusAwareStatusBar';
 import { AntDesign } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
+import { useEffect } from 'react';
 
 const ScreenContainer = ({
 	children,
@@ -18,13 +19,26 @@ const ScreenContainer = ({
 	onPressIcon,
 }) => {
 	const theme = useTheme();
+	const fadeAnimation = new Animated.Value(0);
+
+	useEffect(() => {
+		Animated.timing(fadeAnimation, {
+			toValue: 1,
+			duration: 500,
+			useNativeDriver: true,
+		}).start();
+	}, []);
 
 	return (
-		<View
+		<Animated.View
 			style={[
 				styles.screenContainer,
-				{ backgroundColor: theme.colors.background },
+				{
+					backgroundColor: theme.colors.background,
+					opacity: fadeAnimation,
+				},
 			]}
+			entering
 		>
 			<FocusAwareStatusBar
 				barStyle={theme.dark ? 'light-content' : 'dark-content'}
@@ -45,7 +59,7 @@ const ScreenContainer = ({
 						<TouchableOpacity onPress={onPressIcon}>
 							<AntDesign
 								name='pluscircle'
-								size={36}
+								size={32}
 								color={theme.colors.primary}
 							/>
 						</TouchableOpacity>
@@ -53,7 +67,7 @@ const ScreenContainer = ({
 				</Animated.View>
 				<View style={styles.mainContentContainer}>{children}</View>
 			</SafeAreaView>
-		</View>
+		</Animated.View>
 	);
 };
 

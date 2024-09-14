@@ -6,18 +6,18 @@ import {
 	Pressable,
 	FlatList,
 } from 'react-native';
-import { useContext } from 'react';
-import { AppContext } from '../../utils/appContext';
-import CardSelectionItem from './CardSelectionItem';
+import { useState } from 'react';
+import CardsOptionItem from './CardsOptionItem';
 import data from '../../data/cardsData';
 import { useTheme } from '@react-navigation/native';
+import useCardStore from '../../store/card-store';
 
-const CardsSelectionList = () => {
-	const { onClearSearch, selectCardHandler, onUserSearch, userQuery } =
-		useContext(AppContext);
+const CardsOptionsList = () => {
+	const { cardSelectionHandler } = useCardStore(state => ({
+		cardSelectionHandler: state.cardSelectionHandler,
+	}));
 	const { colors } = useTheme();
-	// const sortedCards = data.sort((a, b) => b.cardName - a.cardName);
-	// console.log(sortedCards.cardName);
+	const [userQuery, setUserQuery] = useState('');
 
 	return (
 		<View style={styles.container}>
@@ -32,9 +32,12 @@ const CardsSelectionList = () => {
 						styles.inputField,
 						{ color: colors.text, borderColor: colors.gray },
 					]}
-					onChangeText={onUserSearch}
+					onChangeText={enteredText => setUserQuery(enteredText)}
 				/>
-				<Pressable style={styles.clearButton} onPress={onClearSearch}>
+				<Pressable
+					style={styles.clearButton}
+					onPress={() => setUserQuery('')}
+				>
 					<Text style={[styles.clearText, { color: colors.gray }]}>
 						Reset
 					</Text>
@@ -51,9 +54,11 @@ const CardsSelectionList = () => {
 					//if query is empty
 					if (userQuery === '') {
 						return (
-							<CardSelectionItem
+							<CardsOptionItem
 								item={item}
-								onCardSelection={selectCardHandler}
+								onCardSelection={() =>
+									cardSelectionHandler(item)
+								}
 								key={item.id}
 							/>
 						);
@@ -66,10 +71,12 @@ const CardsSelectionList = () => {
 							.includes(userQuery.toLowerCase())
 					) {
 						return (
-							<CardSelectionItem
+							<CardsOptionItem
 								item={item}
 								key={item.id}
-								onCardSelection={selectCardHandler}
+								onCardSelection={() =>
+									cardSelectionHandler(item)
+								}
 							/>
 						);
 					}
@@ -78,7 +85,7 @@ const CardsSelectionList = () => {
 		</View>
 	);
 };
-export default CardsSelectionList;
+export default CardsOptionsList;
 const styles = StyleSheet.create({
 	container: {
 		paddingTop: 30,

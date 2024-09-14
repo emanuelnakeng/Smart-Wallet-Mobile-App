@@ -10,19 +10,27 @@ import ScreenContainer from '../components/UI/ScreenContainer';
 import AccountItem from '../components/Settings/AccountItem';
 import * as WebBrowser from 'expo-web-browser';
 import { useTheme } from '@react-navigation/native';
-import { useContext, useState } from 'react';
-import { AppContext } from '../utils/appContext';
-import { deleteAllCardsUser } from '../utils/http';
-import { AuthContext } from '../utils/authContext';
-import { auth } from '../utils/firebase';
+import useAuthStore from '../store/auth-store';
+import useCardStore from '../store/card-store';
+import { useState } from 'react';
+import SortModal from '../components/Settings/SortModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const app = require('../app.json');
 
 const Settings = () => {
 	const { colors } = useTheme();
-	const { setUserCards } = useContext(AppContext);
-	const { isUser } = useContext(AuthContext);
-	const [isVisible, setIsVisible] = useState(false);
+	const { logoutUser, isUser } = useAuthStore(state => ({
+		logoutUser: state.logoutUser,
+		isUser: state.isUser,
+	}));
+	const { clearCards, userCardsAsc, userCardsDesc, userCardsLastModified } =
+		useCardStore(state => ({
+			clearCards: state.clearCards,
+		}));
+	const [isRefreshing, setIsRefreshing] = useState(false);
+	const [isSortModal, setIsSortModal] = useState(false);
+
 	const AnimatedHeaderValue = new Animated.Value(0);
 	const headerMaxHeight = 60;
 	const headerMinHeight = 50;
@@ -38,14 +46,10 @@ const Settings = () => {
 		await WebBrowser.openBrowserAsync(link);
 	};
 
-	const closeModalHandler = () => {
-		setIsVisible(false);
-	};
-
-	const resetAppHandler = async () => {
+	const resetAppHandler = () => {
 		Alert.alert(
-			'Confirm Deletion',
-			`Are you sure? This action cannot be undone.`,
+			'Confirm Clear',
+			`Are you sure? This action will clear all card data.`,
 			[
 				{
 					text: 'No',
@@ -54,9 +58,10 @@ const Settings = () => {
 				{
 					text: 'Yes',
 					onPress: async () => {
-						await deleteAllCardsUser(isUser);
-						await auth.signOut();
-						setUserCards('');
+						setIsRefreshing(true);
+						await logoutUser(isUser);
+						clearCards();
+						setIsRefreshing(false);
 					},
 					style: 'destructive',
 				},
@@ -67,7 +72,10 @@ const Settings = () => {
 	return (
 		<ScreenContainer screenTitle='Settings' headerHeight={animHeaderHeight}>
 			<ScrollView
-				style={{ paddingTop: 10, paddingHorizontal: 20 }}
+				style={{
+					paddingTop: 10,
+					paddingHorizontal: 20,
+				}}
 				scrollEventThrottle={16}
 				showsVerticalScrollIndicator={false}
 				onScroll={Animated.event(
@@ -88,17 +96,15 @@ const Settings = () => {
 						Customize
 					</Text>
 					<AccountItem
-						icon='lock-open'
-						actionLabel='Permissions'
-						onPress={() =>
-							openLinkHandler('https://www.google.com')
-						}
-						//link to app permissions
+						icon='swap-vertical'
+						actionLabel='Sort by'
+						onPress={() => setIsSortModal(true)}
 					/>
 					<AccountItem
 						icon='trash-sharp'
-						actionLabel='Clear Data'
+						actionLabel='Clear All'
 						onPress={resetAppHandler}
+						isLoading={isRefreshing}
 					/>
 				</View>
 				<View style={styles.accountSectionContainer}>
@@ -169,17 +175,21 @@ const Settings = () => {
 						</Text>
 					</Text>
 					<Text style={[styles.credits, { color: colors.gray }]}>
-						&copy; {currentYear}
+						&copy; Weru {currentYear}
 					</Text>
 				</View>
 			</ScrollView>
+			<SortModal
+				isVisible={isSortModal}
+				onCloseModal={() => setIsSortModal(false)}
+			/>
 		</ScreenContainer>
 	);
 };
 export default Settings;
 const styles = StyleSheet.create({
 	accountSectionContainer: {
-		rowGap: 25,
+		rowGap: 30,
 		paddingBottom: 30,
 	},
 	sectionHeading: {
@@ -190,6 +200,7 @@ const styles = StyleSheet.create({
 	versionSectionContainer: {
 		alignItems: 'center',
 		rowGap: 10,
+		paddingBottom: 40,
 	},
 	credits: {
 		fontFamily: 'inter-semiBold',

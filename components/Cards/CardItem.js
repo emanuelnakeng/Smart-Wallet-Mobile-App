@@ -10,8 +10,7 @@ import {
 	FlingGestureHandler,
 	State,
 } from 'react-native-gesture-handler';
-import { useContext } from 'react';
-import { AppContext } from '../../utils/appContext';
+import useCardStore from '../../store/card-store';
 
 const LOGO_SIZE = constants.DEVICE_WIDTH * 0.25;
 const CARD_WIDTH = constants.DEVICE_WIDTH - 40;
@@ -27,7 +26,7 @@ const CardItem = ({
 	maxVisibleCards,
 	navigation,
 }) => {
-	const { userCards } = useContext(AppContext);
+	const userCards = useCardStore(state => state.userCards);
 
 	const animatedStyle = useAnimatedStyle(() => {
 		const translateY = interpolate(

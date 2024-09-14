@@ -14,17 +14,16 @@ import FocusAwareStatusBar from '../UI/FocusAwareStatusBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Barcode } from 'expo-barcode-generator';
 import QRCode from 'react-native-qrcode-svg';
-import { useContext } from 'react';
-import { AppContext } from '../../utils/appContext';
 import { useTheme } from '@react-navigation/native';
 import { deleteUserCard } from '../../utils/http';
+import useCardStore from '../../store/card-store';
 
 const CardDetails = ({ navigation, route }) => {
-	const { userCards, setUserCards } = useContext(AppContext);
+	const deleteCard = useCardStore(state => state.deleteCard);
+	const toggleLoading = useCardStore(state => state.toggleLoading);
 	const theme = useTheme();
 
 	const deleteCardHandler = id => {
-		const newCards = userCards.filter(item => item.cardId !== id);
 		Alert.alert(
 			'Confirm Deletion',
 			`Are you sure you want to delete card?`,
@@ -36,8 +35,10 @@ const CardDetails = ({ navigation, route }) => {
 				{
 					text: 'Yes',
 					onPress: async () => {
-						setUserCards(newCards);
+						toggleLoading();
 						await deleteUserCard(id);
+						toggleLoading();
+						deleteCard(id);
 					},
 					style: 'default',
 				},
@@ -118,13 +119,17 @@ const CardDetails = ({ navigation, route }) => {
 											background: '#fff',
 											lineColor:
 												theme.colors.transparency,
-											width: 2.5,
+											width:
+												route.params?.cardNumber
+													.length >= 15
+													? 1.5
+													: 2.5,
 											height:
 												constants.DEVICE_WIDTH * 0.3,
 											marginTop: 40,
 											marginBottom: 40,
-											fontSize: 16,
-											textMargin: 5,
+											fontSize: 16.5,
+											textMargin: 8,
 										}}
 									/>
 								)}

@@ -2,32 +2,24 @@ import {
 	Modal,
 	Pressable,
 	StyleSheet,
+	Text,
 	TouchableWithoutFeedback,
 	View,
-	Text,
 } from 'react-native';
-import constants from '../../utils/constants';
-import { Ionicons } from '@expo/vector-icons';
-import CreateCardModalContent from './CreateCardModalContent';
 import { useTheme } from '@react-navigation/native';
-import useCardStore from '../../store/card-store';
+import constants from '../../utils/constants';
+import SortItem from './SortItem';
+import { Ionicons } from '@expo/vector-icons';
 
-const CreateCard = ({ navigation }) => {
+const SortModal = ({ isVisible, onCloseModal }) => {
 	const { colors } = useTheme();
-	const { modalLabel, closeCreateCardModal, isModal } = useCardStore(
-		state => ({
-			modalLabel: state.modalLabel,
-			closeCreateCardModal: state.closeCreateCardModal,
-			isModal: state.isModal,
-		})
-	);
 
 	return (
 		<Modal
 			transparent
-			visible={isModal}
+			visible={isVisible}
 			animationType='slide'
-			onRequestClose={closeCreateCardModal}
+			onRequestClose={onCloseModal}
 		>
 			<Pressable
 				style={{
@@ -35,7 +27,7 @@ const CreateCard = ({ navigation }) => {
 					flex: 1,
 					justifyContent: 'flex-end',
 				}}
-				onPress={closeCreateCardModal}
+				onPress={onCloseModal}
 			>
 				<TouchableWithoutFeedback style={{ flex: 1 }}>
 					<View
@@ -48,15 +40,12 @@ const CreateCard = ({ navigation }) => {
 					>
 						<View style={styles.headerContainer}>
 							<Text
-								style={[
-									styles.addCardText,
-									{ color: colors.text },
-								]}
+								style={[styles.header, { color: colors.text }]}
 							>
-								{modalLabel}
+								Sort by:
 							</Text>
 							<Pressable
-								onPress={closeCreateCardModal}
+								onPress={onCloseModal}
 								style={styles.actionContainer}
 							>
 								<Ionicons
@@ -66,34 +55,35 @@ const CreateCard = ({ navigation }) => {
 								/>
 							</Pressable>
 						</View>
-						<CreateCardModalContent navigation={navigation} />
+						<View>
+							<SortItem sort='Name (A - Z)' />
+							<SortItem sort='Name (Z - A)' />
+						</View>
 					</View>
 				</TouchableWithoutFeedback>
 			</Pressable>
 		</Modal>
 	);
 };
-export default CreateCard;
-
+export default SortModal;
 const styles = StyleSheet.create({
 	contentContainer: {
-		height: constants.DEVICE_HEIGHT - 60,
+		height: constants.DEVICE_HEIGHT * 0.4,
 		borderTopEndRadius: 20,
 		borderTopLeftRadius: 20,
 	},
-	addCardText: {
+	headerContainer: {
+		padding: 20,
+	},
+	header: {
 		fontFamily: 'inter-bold',
 		fontSize: 20,
 		textAlign: 'center',
 		lineHeight: 36,
 	},
-	headerContainer: {
-		marginTop: 20,
-		paddingHorizontal: 20,
-		justifyContent: 'center',
-	},
 	actionContainer: {
 		position: 'absolute',
 		right: 20,
+		top: 20,
 	},
 });
