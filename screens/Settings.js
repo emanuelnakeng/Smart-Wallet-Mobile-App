@@ -102,7 +102,7 @@ const Settings = () => {
 					/>
 					<AccountItem
 						icon='trash-sharp'
-						actionLabel='Clear All'
+						actionLabel='Reset All'
 						onPress={resetAppHandler}
 						isLoading={isRefreshing}
 					/>
@@ -204,6 +204,6 @@ const styles = StyleSheet.create({
 	},
 	credits: {
 		fontFamily: 'inter-semiBold',
-		fontSize: 12.5,
+		fontSize: 13.5,
 	},
 });
