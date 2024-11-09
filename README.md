@@ -1,56 +1,97 @@
-# Weru - Your Mobile Wallet for Loyalty Store Cards
+# Weru Project Report and Reflection
 
-**Weru** is your personal mobile wallet designed to keep all your loyalty cards in one place. Whether you're shopping at your favorite supermarket or superstore, **Weru** makes it easy to store and manage unlimited loyalty cards directly from your phone. 
+## Project Overview
 
-This app is built with a sleek, user-friendly interface and offers both **light** and **dark mode** options, allowing you to switch between themes for a more personalized experience.
+**Weru** is a mobile wallet application designed to help users store and manage loyalty cards. The app is built using **React Native** and **Expo**, allowing it to work seamlessly across both iOS and Android platforms. The main objective of the project was to create an easy-to-use platform that offers users the ability to store an unlimited number of loyalty cards, making it convenient for them to access and manage all their rewards in one place.
 
-## Preview Images
+The app offers key features such as barcode scanning, bottom navigation, anonymous login, light and dark theme modes, and more. Featuring clean, well-structured code and reusable components.
+
+## Goals and Objectives
+
+The key goals of the **Weru** project were:
+
+- To create a mobile wallet that could store unlimited loyalty cards.
+- To provide a customizable and user-friendly experience with both **light** and **dark modes**.
+- To allow easy navigation and interaction through a bottom navigation bar and barcode scanning.
+- To implement reusable and modular components that could be easily customized and scaled by developers.
+
+### Features Implemented
+
+The app includes a variety of features aimed at enhancing user experience and offering flexibility for developers:
+
+1. **Unlimited Card Storage**: Users can add an unlimited number of loyalty cards, and each card can be accessed quickly within the app.
+2. **Barcode Scanner**: Scans barcodes to add new loyalty cards with ease.
+3. **Customizable Themes**: Users can choose between **light** and **dark** themes based on their preference.
+4. **Bottom Navigation**: Simplifies navigation by providing easy access to all major sections of the app.
+5. **Anonymous Login**: Users can start using the app immediately without needing to create an account, making the app more accessible.
+
+## Technologies Used
+
+- **React Native**: The core framework used to build the app, enabling it to work on both iOS and Android platforms.
+- **Expo**: A powerful toolchain for React Native development, providing additional tools for building, testing, and deploying the app.
+- **React Navigation**: Used to manage transitions and navigation between app screens.
+- **Zustand**: A minimal state management library used for efficient data handling throughout the app.
+- **React Native Lottie**: For adding animations that enhance the user experience.
+- **Expo Barcode Generator**: To easily generate and display barcode images.
+- **React Native Reanimated**: For creating smooth animations with better performance.
+- **React Native Gesture Handler**: Handles gestures within the app, such as swiping and tapping.
+
+## Development Process
+
+The development of **Weru** followed a systematic approach, beginning with a detailed requirement gathering phase and followed by design and coding phases. Here's a breakdown of the key stages:
+
+1. **Planning and Design**: The initial design of the app was focused on simplicity and usability. A wireframe was created to visualize the user flow and ensure a smooth experience from one screen to the next. The app was designed to be visually appealing and lightweight, with a focus on ease of use.
+   
+2. **Development**: After designing the app's UI, the coding phase began. The project was developed using **React Native** and **Expo** to ensure cross-platform compatibility. Key libraries such as **React Navigation** and **Zustand** were incorporated to handle navigation and state management efficiently.
+   
+3. **Testing**: The app was tested on both iOS and Android platforms using the **Expo Go** app. Tests focused on functionality (such as barcode scanning, theme switching, and card management) as well as performance to ensure fast loading times.
+
+4. **Deployment**: Once the app was fully developed and tested, the next step was preparing it for deployment. 
+
+## Challenges and Solutions
+
+During the development process, several challenges arose:
+
+1. **State Management**: Implementing a simple and scalable state management solution proved to be a challenge early on. Using **Zustand**, a minimal and fast state management tool, helped keep the codebase clean and efficient.
+   
+2. **Customizing Barcode Scanning**: Ensuring the barcode scanning function was accurate across different devices required significant testing. Using Expo’s **Barcode Scanner** package, I was able to implement a robust solution that worked reliably on both iOS and Android.
+   
+
+## Reflection
+
+Reflecting on the **Weru** project, several key takeaways can be noted:
+
+- **Importance of Simplicity**: Keeping the user interface simple and intuitive proved to be a key factor in the app’s success. The goal was to make it as easy as possible for users to add, manage, and access their loyalty cards without any complexity.
+  
+- **Reusable Components**: By creating reusable components and maintaining modular code, the app is highly customizable and scalable, allowing developers to easily extend the functionality or adjust the app to their needs.
+  
+- **User-Centric Design**: Features like anonymous login, barcode scanning, and unlimited card storage were implemented to make the app as user-friendly and accessible as possible. The ability to switch between light and dark themes was also designed to provide a more personalized experience.
+
+- **Performance Optimization**: Ensuring the app loads quickly and performs efficiently, even with multiple cards stored, was a priority. The app was optimized for speed by reducing unnecessary components and improving rendering performance.
+
+### Future Improvements
+
+While **Weru** is functional and easy to use, there are several potential improvements for future versions:
+
+1. **Advanced Card Management**: Users could benefit from additional card organization features, such as categorizing cards or adding notes to each card.
+2. **App Security**: Adding features like user authentication or PIN protection would improve security, especially for users storing sensitive information in the app.
+3. **Cloud Sync**: Allow users to sync their cards across devices via cloud storage, ensuring that cards are always available, no matter which device they use.
+
+## Preview
 
 ![Weru Mobile Wallet](https://cdn.dribbble.com/userupload/17023520/file/original-3c0323a69c045ccb4fa9e94ae4b487d8.png?resize=1024x1041)
 
 ![Weru Mobile Wallet](https://cdn.dribbble.com/userupload/17484494/file/original-eca12462c567fe0f57f5639c391b8677.png?resize=1180x1058).
 
-## Key Features
+## Conclusion
 
-- **Store Unlimited Loyalty Cards**: Add as many loyalty cards as you need, and manage them all from one convenient app.
-- **Light & Dark Mode**: Choose between a bright, clean interface with **light mode** or a dark, soothing theme with **dark mode** for reduced eye strain, especially in low-light environments.
-- **User-Friendly Interface**: Effortlessly browse and manage your cards with a simple and intuitive design.
-- **Customizable**: Personalize the app to suit your preferences, from card images to theme options.
+The **Weru** project successfully meets its goals of providing a simple, customizable, and user-friendly mobile wallet for loyalty cards. The project was an excellent opportunity to practice and demonstrate skills in **React Native** and **Expo** while delivering a functional, high-quality app. With its lightweight design, reusable components, and easy customization, **Weru** serves as an excellent template for anyone looking to build a mobile loyalty card app.
 
-## Technologies Used
+---
 
-- **React Native**: A framework for building mobile applications that work seamlessly across both iOS and Android platforms.
-- **Expo**: A platform and framework that makes it easier to get started with React Native by providing a set of tools and services for building and deploying apps.
-- **React Navigation**: A library used for managing navigation and transitions between different screens within the app, making it easier to create a smooth user experience.
-- **Zustand**: A small, fast, and scalable state management library for React, used in this app to manage the global state and simplify data flow across the app.
 
-## Application Features
 
-- **Beginner Friendly**: Designed with simplicity in mind, making it easy for new developers to understand and customize.
-- **Easy to Understand Code**: The codebase is clean and well-documented for easy navigation and comprehension.
-- **Quality Code**: Written with best practices to ensure stability, maintainability, and performance.
-- **Reusable Components**: The app utilizes reusable components, saving time and effort in customization.
-- **Fast Loading**: Optimized for speed and performance, ensuring quick load times for a seamless user experience.
-- **Custom Colors**: Easily customizable color schemes to match your branding.
-- **Light and Dark Theme**: Switch between light and dark modes for personalized user experience.
-- **Bottom Navigation**: Provides an easy-to-use navigation bar at the bottom for quick access to core features.
-- **Reusable Layout Management**: The layout management is designed to be flexible and reusable across different screens.
-- **Anonymous Login**: Supports login without requiring any personal information, giving users the option to stay anonymous.
-- **Barcode Scanner**: Allows users to scan barcodes and easily add loyalty cards to the app.
-- **Unlimited Cards**: Users can add as many loyalty cards as they like without any limitations.
-- **Easy to Customize**: The template is flexible and easily adjustable to fit your specific needs, with minimal effort.
-- **Well Structured Code**: Organized codebase to ensure readability and ease of customization.
-- **Admob Ready**: Integrated with Admob for monetization (requires customization for your app).
-- **Vector Icons**: Uses vector icons for crisp and scalable visuals.
-- **Custom Font**: Supports custom fonts for better typography control.
-- **Uses Zustand for State Management**: Zustand is used for simple and efficient state management throughout the app.
 
-## Credits
 
-- **React Navigation**: For handling the navigation and transitions between screens in the app.
-- **React Native Lottie**: For adding smooth animations using Lottie files.
-- **Expo Barcode Generator**: To generate barcodes for the app.
-- **React Native Reanimated**: For building animations with high performance and flexibility.
-- **React Native Gesture Handler**: For handling gestures in the app with better performance and responsiveness.
-- **React Native QRCode SVG**: Used to generate and display QR codes in the app.
-- **Zustand**: A fast and scalable state management solution for React, used to manage global state within the app.
+
+
