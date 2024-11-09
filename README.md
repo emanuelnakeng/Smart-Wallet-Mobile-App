@@ -6,6 +6,8 @@
 
 The app offers key features such as barcode scanning, bottom navigation, anonymous login, light and dark theme modes, and more. Featuring clean, well-structured code and reusable components.
 
+![Weru Mobile Wallet](https://cdn.dribbble.com/userupload/17023520/file/original-3c0323a69c045ccb4fa9e94ae4b487d8.png?resize=1024x1041)
+
 ## Goals and Objectives
 
 The key goals of the **Weru** project were:
@@ -77,11 +79,9 @@ While **Weru** is functional and easy to use, there are several potential improv
 2. **App Security**: Adding features like user authentication or PIN protection would improve security, especially for users storing sensitive information in the app.
 3. **Cloud Sync**: Allow users to sync their cards across devices via cloud storage, ensuring that cards are always available, no matter which device they use.
 
-## Preview
+## Dark and Light Mode
 
-![Weru Mobile Wallet](https://cdn.dribbble.com/userupload/17023520/file/original-3c0323a69c045ccb4fa9e94ae4b487d8.png?resize=1024x1041)
-
-![Weru Mobile Wallet](https://cdn.dribbble.com/userupload/17484494/file/original-eca12462c567fe0f57f5639c391b8677.png?resize=1180x1058).
+![Weru Mobile Wallet](https://cdn.dribbble.com/userupload/17484494/file/original-eca12462c567fe0f57f5639c391b8677.png?resize=1180x1058)
 
 ## Conclusion
 
